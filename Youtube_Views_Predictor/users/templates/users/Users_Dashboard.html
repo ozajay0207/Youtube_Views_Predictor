@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+<style>
+    /* Set a style for all buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+<h1>DashBoard</h1>
+<h3>{{ User_Detail.Display_Name }} {{ User_Detail.Email }}</h3>
+<form method="post" action="/users/Sign_Out/">
+    {% csrf_token %}
+    <button style="width:auto;">Sign Out</button>
+</form>
+</body>
+</html>

@@ -52,12 +52,12 @@ def dashboard(request,channel_id):
     dates = dates[::-1]
     dates = dates[:7]
     dates = dates[::-1]
-    print(increase_in_subs)
+
 
     #json_list = simplejson.dumps(YOUR_LIST)
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
-        return render(request, 'channel/Channel_Dashboard.html',{'User_Detail':User_Detail,'Channel_Main_Data':channel_main_data,'Channel_Sub_Data':channel_sub_data,'views':increase_in_views,'subs':increase_in_subs,'dates':dates,'table_view_increase':zip(views_for_table,increase_in_views),'table_sub_increase':zip(subs_for_table,increase_in_subs)})
+        return render(request, 'channel/Channel_Dashboard.html',{'User_Detail':User_Detail,'Channel_Main_Data':channel_main_data,'Channel_Sub_Data':channel_sub_data,'views':increase_in_views[::-1],'subs':increase_in_subs[::-1],'dates':dates,'table_view_increase':zip(views_for_table,increase_in_views),'table_sub_increase':zip(subs_for_table,increase_in_subs)})
     else:
-        return render(request, 'channel/Channel_Dashboard.html', {'User_Detail': '','Channel_Main_Data':channel_main_data,'Channel_Sub_Data':channel_sub_data,'views':increase_in_views,'subs':increase_in_subs,'dates':dates,'table_view_increase':zip(views_for_table,increase_in_views),'table_sub_increase':zip(subs_for_table,increase_in_subs)})
+        return render(request, 'channel/Channel_Dashboard.html', {'User_Detail': '','Channel_Main_Data':channel_main_data,'Channel_Sub_Data':channel_sub_data,'views':increase_in_views[::-1],'subs':increase_in_subs[::-1],'dates':dates,'table_view_increase':zip(views_for_table,increase_in_views),'table_sub_increase':zip(subs_for_table,increase_in_subs)})

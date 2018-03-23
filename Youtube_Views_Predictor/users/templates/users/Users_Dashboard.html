@@ -1,32 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Dashboard</title>
-<style>
-    /* Set a style for all buttons */
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-}
+{% extends 'base.html' %}
 
-button:hover {
-    opacity: 0.8;
-}
-</style>
-</head>
+{% block left_drawer %}
+{% endblock %}
+{% block user %}
 
-<body>
-<h1>DashBoard</h1>
-<h3>{{ User_Detail.Display_Name }} {{ User_Detail.Email }}</h3>
-<form method="post" action="/users/Sign_Out/">
-    {% csrf_token %}
-    <button style="width:auto;">Sign Out</button>
-</form>
-</body>
-</html>
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+ <h1>DASHBOARD</h1>
+{% endblock %}

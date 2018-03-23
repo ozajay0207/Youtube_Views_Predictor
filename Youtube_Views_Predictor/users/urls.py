@@ -6,8 +6,12 @@ from django.conf.urls.static import static
 from users import views
 
 urlpatterns = [
-  url(r'^$',views.DashBoard,name='DashBoard'),
-  url(r'^Sign_Up/$',views.Sign_Up,name='Sign_Up'),
-  url(r'^Sign_In/$',views.Sign_In,name='Sign_In'),
-  url(r'^Sign_Out/$',views.Sign_Out,name='Sign_Out'),
+    url(r'^$',views.DashBoard,name='DashBoard'),
+    url(r'^Sign_Up/$',views.Sign_Up,name='Sign_Up'),
+    url(r'^Sign_In/$',views.Sign_In,name='Sign_In'),
+    url(r'^Sign_Out/$',views.Sign_Out,name='Sign_Out'),
+    url(r'^login/$',views.login,name='Log_In'),
+    url(r'^register/$',views.register,name='Register'),
+    url(r'^validate_email/$',views.validate_email,name='vaidate_email'),
+    url(r'^validate_display_name/$',views.validate_display_name,name='vaidate_display_name'),
 ]

@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block left_drawer %}
+    <li class="nav-item"><a class="nav-link nav-toggler hidden-md-up text-muted  "
+                            href="javascript:void(0)"><i class="mdi mdi-menu"></i></a></li>
+    <li class="nav-item m-l-10"><a class="nav-link sidebartoggler hidden-sm-down text-muted  "
+                                   href="javascript:void(0)"><i class="ti-menu"></i></a></li>
+{% endblock %}
+{% block user %}
+
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <!-- Left Sidebar  -->
+    <div class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="nav-devider"></li>
+
+                    <li><img src="{{ Channel_Main_Data.channel_image_url }}" height="10%" width="100%"></li>
+                    <li class="nav-label"><h3>{{ Channel_Main_Data.channel_name }}</h3></li>
+                    <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
+                    <!-- <ul aria-expanded="false" class="collapse"> -->
+                    <!-- <li><a href="index.html">Ecommerce </a></li> -->
+                    <!-- <li><a href="index1.html">Analytics </a></li> -->
+                    <!-- </ul> -->
+                    <!-- </li> -->
+                    <li class="nav-label">Statistics</li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
+                            class="hide-menu">Charts</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="chart-flot.html">Views Count</a></li>
+                            <li><a href="chart-morris.html">Subscribers Count</a></li>
+                            <!-- <li><a href="chart-chartjs.html"></a></li> -->
+                            <!-- <li><a href="chart-chartist.html">Chartist </a></li> -->
+                            <!-- <li><a href="chart-amchart.html">AmChart</a></li> -->
+                            <!-- <li><a href="chart-echart.html">EChart</a></li> -->
+                            <!-- <li><a href="chart-sparkline.html">Sparkline</a></li> -->
+                            <!-- <li><a href="chart-peity.html">Peity</a></li> -->
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
+                            class="hide-menu">Tables</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="table-bootstrap.html">Views Count</a></li>
+                            <li><a href="table-datatable.html">Subscribers Count</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </div>
+    <!-- End Left Sidebar  -->
+    <!-- Page wrapper  -->
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Dashboard</h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Home/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/channel/">Channel</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+        <!-- Container fluid  -->
+        <div class="container-fluid">
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card bg-primary p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="fa fa-usd f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">BAKI</h2>
+                                <p class="m-b-0">Total Earnings</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="fa fa-archive f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">BAKI</h2>
+                                <p class="m-b-0">Total Videos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                {% for i in Channel_Sub_Data|slice:":1" %}
+                                <h2 class="color-white">{{ i.view_count }}</h2>
+                                {% endfor %}
+                                <p class="m-b-0">Views</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-success p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="fa fa-user f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                {% for i in Channel_Sub_Data|slice:":1" %}
+                                <h2 class="color-white">{{ i.subscriber_count }}</h2>
+                                {% endfor %}
+                                <p class="m-b-0">Subscribers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End PAge Content -->
+        </div>
+        <!-- End Container fluid  -->
+        <!-- Row for Views -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card" style="height: 94%">
+                    <div class="card-title">
+                        <h4>Daily Views Increment for Last 7 Days</h4>
+                    </div>
+                    <div class="card-body" style="width:100%;height:120%">
+                        <canvas id="myChart"></canvas>
+
+                    </div>
+                </div>
+                <!-- /# card -->
+            </div>
+            <!-- /# column -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>Views in Last 7 days</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover ">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Views</th>
+                                    <th>Daily Increase</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for v,i in table_view_increase|slice:":7" %}
+                                    <tr>
+                                        <td>{{ v.date1 }}</td>
+                                        <td>{{ v.view_count }}</td>
+                                        <td>{{ i }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Row for Views -->
+        <!-- Row for Subscribers -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>Subscribers in Last 7 days</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover ">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Views</th>
+                                    <th>Daily Increase</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for v,i in table_sub_increase|slice:":7" %}
+                                    <tr>
+                                        <td>{{ v.date1 }}</td>
+                                        <td>{{ v.subscriber_count }}</td>
+                                        <td>{{ i }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /# column -->
+            <div class="col-lg-6">
+                <div class="card" style="height: 94%">
+                    <div class="card-title">
+                        <h4>Daily Views Increment for Last 7 Days</h4>
+                    </div>
+                    <div class="card-body" style="width:100%;height:200%">
+                        <canvas id="myChart1"></canvas>
+
+                    </div>
+                </div>
+                <!-- /# card -->
+            </div>
+        </div>
+
+        <!-- End Row for Sbscribers -->
+        <!-- footer -->
+
+        <!-- End footer -->
+    </div>
+    <!-- End Page wrapper  -->
+    </div>
+    <!-- End Wrapper -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var views = {{ views }};
+
+        var dates = {{ dates|safe }}
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '# of Views',
+                    data: views,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart1").getContext('2d');
+        var subs= {{ subs }}
+        var dates= {{ dates|safe }}
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '# of Subscribers',
+                    data: subs,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                        ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}
+{% block afterjs %}
+
+{% endblock %}

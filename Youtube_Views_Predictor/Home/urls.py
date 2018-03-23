@@ -7,5 +7,5 @@ from Home import views
 
 urlpatterns = [
   url(r'^$',views.Home,name='home'),
-
+  url(r'^demo/$',views.Demo,name='Demo'),
 ]

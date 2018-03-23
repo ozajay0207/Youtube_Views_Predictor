@@ -1,0 +1,9 @@
+{% if data.count > 0 %}
+    {% for d in data %}
+        {{ d }}
+    {% endfor %}
+{% else %}
+    {% if data != 'None' %}
+             No Data Found....
+    {% endif %}
+{% endif %}

@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+{% block body %}
+    <!-- Left Sidebar  -->
+        <div class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="nav-devider"></li>
+
+						<li><img src="https://yt3.ggpht.com/-8ZnBMvGyRbQ/AAAAAAAAAAI/AAAAAAAAAAA/_Hp2swLOznQ/s288-mo-c-c0xffffffff-rj-k-no/photo.jpg" height="10%" width="100%"></li>
+						<li class="nav-label"><h3>T Series</h3></li>
+							<!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
+								<!-- <ul aria-expanded="false" class="collapse"> -->
+									<!-- <li><a href="index.html">Ecommerce </a></li> -->
+									<!-- <li><a href="index1.html">Analytics </a></li> -->
+								<!-- </ul> -->
+							<!-- </li> -->
+                        <li class="nav-label">Statistics</li>
+                        <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span class="hide-menu">Charts</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a href="chart-flot.html">Views Count</a></li>
+                                <li><a href="chart-morris.html">Subscribers Count</a></li>
+                                <!-- <li><a href="chart-chartjs.html"></a></li> -->
+                                <!-- <li><a href="chart-chartist.html">Chartist </a></li> -->
+                                <!-- <li><a href="chart-amchart.html">AmChart</a></li> -->
+                                <!-- <li><a href="chart-echart.html">EChart</a></li> -->
+                                <!-- <li><a href="chart-sparkline.html">Sparkline</a></li> -->
+                                <!-- <li><a href="chart-peity.html">Peity</a></li> -->
+                            </ul>
+                        </li>
+						<li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Tables</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a href="table-bootstrap.html">Views Count</a></li>
+                                <li><a href="table-datatable.html">Subscribers Count</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </div>
+        <!-- End Left Sidebar  -->
+        <!-- Page wrapper  -->
+        <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Dashboard</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- End Bread crumb -->
+            <!-- Container fluid  -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-primary p-30">
+                            <div class="media widget-ten">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-usd f-s-40"></i></span>
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2 class="color-white">520</h2>
+                                    <p class="m-b-0">Total Earnings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning p-30">
+                            <div class="media widget-ten">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-archive f-s-40"></i></span>
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2 class="color-white">25</h2>
+                                    <p class="m-b-0">Total Videos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<div class="col-md-3">
+                        <div class="card bg-danger p-30">
+                            <div class="media widget-ten">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="ti-location-pin f-s-40"></i></span>
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2 class="color-white">27812312</h2>
+                                    <p class="m-b-0">Views</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card bg-success p-30">
+                            <div class="media widget-ten">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-user f-s-40"></i></span>
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2 class="color-white">847786</h2>
+                                    <p class="m-b-0">Subscribers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- End PAge Content -->
+            </div>
+            <!-- End Container fluid  -->
+			<!-- Row for Views -->
+			<div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Views</h4>
+                            </div>
+                            <div class="card-body" style="width:100%;height:120%">
+                                <canvas id="myChart"></canvas>
+
+                            </div>
+                        </div>
+                        <!-- /# card -->
+                    </div>
+                    <!-- /# column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Views in Last 5 days</h4>
+                            </div>
+                            <div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-hover ">
+										<thead>
+											<tr>
+												<th>Date</th>
+												<th>Views</th>
+												<th>Increase</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>19th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>18th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>17th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>16th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>15th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+                        </div>
+                    </div>
+				</div>
+			<!-- End Row for Views -->
+			<!-- Row for Subscribers -->
+			<div class="row">
+					<div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Subscribers in Last 5 days</h4>
+                            </div>
+                            <div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-hover ">
+										<thead>
+											<tr>
+												<th>Date</th>
+												<th>Views</th>
+												<th>Increase</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>19th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>18th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>17th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>16th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+											<tr>
+												<td>15th March 2018</td>
+												<td>27812312</td>
+												<td>200000</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+                        </div>
+                    </div>
+
+                <!-- /# column -->
+				<div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Subscribers</h4>
+                            </div>
+                            <div class="card-body" style="width:100%;height:200%">
+                                <canvas id="myChart1"></canvas>
+
+                            </div>
+                        </div>
+                        <!-- /# card -->
+                    </div>
+				</div>
+
+			<!-- End Row for Sbscribers -->
+            <!-- footer -->
+
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <!-- chart.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<script>
+	var ctx = document.getElementById("myChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+				labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+				datasets: [{
+						label: '# of Views',
+						data: [11000, 11600, 13000, 15000, 22000, 30000, 35000],
+						backgroundColor: [
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)',
+							'rgba(153, 102, 255, 0.2)',
+							'rgba(255, 159, 64, 0.2)',
+							'rgba(255, 99, 132, 0.2)'
+						],
+						borderColor: [
+							'rgba(255,99,132,1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)',
+							'rgba(153, 102, 255, 1)',
+							'rgba(255, 159, 64, 1)',
+							'rgba(255, 99, 132, 1)'
+						],
+						borderWidth: 1
+				}]
+			},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero:true
+					}
+				}]
+			}
+		}
+});
+</script>
+<script>
+	var ctx = document.getElementById("myChart1").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+				labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+				datasets: [{
+						label: '# of Subscribers',
+						data: [1000, 1500, 1700, 1800, 2000, 5000, 9000],
+						backgroundColor: [
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)',
+							'rgba(153, 102, 255, 0.2)',
+							'rgba(255, 159, 64, 0.2)',
+							'rgba(255, 99, 132, 0.2)'
+						],
+						borderColor: [
+							'rgba(255,99,132,1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)',
+							'rgba(153, 102, 255, 1)',
+							'rgba(255, 159, 64, 1)',
+							'rgba(255, 99, 132, 1)'
+						],
+						borderWidth: 1
+				}]
+			},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero:true
+					}
+				}]
+			}
+		}
+});
+</script>
+{% endblock %}

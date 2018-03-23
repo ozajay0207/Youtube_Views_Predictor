@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block left_drawer %}
+{% endblock %}
+{% block user %}
+
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Register</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-primary">List Of Channels</h3></div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/">Home</a></li>
+                <li class="breadcrumb-item active">Channel</li>
+            </ol>
+        </div>
+    </div>
+    {% for channel in Channel_List %}
+        <div>
+            <div class="card p-20" style="background: rgba(229,229,229,1.0);margin-left:5%;margin-right: 5%">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <img src="{{ channel.channel_image_url }}">
+                    </div>
+                    <div class="media-body media-text-left" style="margin: 1%">
+                        <a href="/channel/dashboard/{{ channel.pk }}/"><h2>{{ channel.channel_name }}</h2></a>
+                    </div>
+                    <div class="media-body media-text-right" style="margin: 1%">
+                        <a href="/channel/dashboard/{{ channel.pk }}/"><h3><u>View Analysis</u></h3></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

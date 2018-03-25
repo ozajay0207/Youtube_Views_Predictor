@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% block left_drawer %}
+    <li class="nav-item"><a class="nav-link nav-toggler hidden-md-up text-muted  "
+                            href="javascript:void(0)"><i class="mdi mdi-menu"></i></a></li>
+    <li class="nav-item m-l-10"><a class="nav-link sidebartoggler hidden-sm-down text-muted  "
+                                   href="javascript:void(0)"><i class="ti-menu"></i></a></li>
+{% endblock %}
+{% block user %}
+
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <!-- Left Sidebar  -->
+    <div class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="nav-devider"></li>
+
+                    <li><img src="{{ Channel_Main_Data.channel_image_url }}" height="10%" width="100%"></li>
+                    <li class="nav-label"><h3>{{ Channel_Main_Data.channel_name }}</h3></li>
+                    <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
+                    <!-- <ul aria-expanded="false" class="collapse"> -->
+                    <!-- <li><a href="index.html">Ecommerce </a></li> -->
+                    <!-- <li><a href="index1.html">Analytics </a></li> -->
+                    <!-- </ul> -->
+                    <!-- </li> -->
+                    <a href="/channel/dashboard/{{ Channel_Main_Data.pk }}/">
+                        <li class="nav-label"><span class="glyphicon glyphicon-chevron-left"></span> Return To DashBoard
+                        </li>
+                    </a>
+                    <li class="nav-label">Statistics</li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
+                            class="hide-menu">Charts</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/channel/dashboard/views_analysis/{{ Channel_Main_Data.id }}/">Views
+                                Analysis</a></li>
+                            <li><a href="chart-morris.html">Subscribers Analysis</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
+                            class="hide-menu">Tables</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="table-bootstrap.html">Views Count</a></li>
+                            <li><a href="table-datatable.html">Subscribers Count</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </div>
+    <!-- End Left Sidebar  -->
+    <!-- Page wrapper  -->
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Views Analysis</h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Home/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/channel/">Channel</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+        <!-- Row for Views -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card" style="height: 94%">
+                    <div class="card-title">
+                        <h4>Total Views for Last 30 Days</h4>
+                    </div>
+                    <div class="card-body" style="width:100%;height:120%">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <!-- /# card -->
+            </div>
+            <!-- /# column -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>Predicted Views for Next 30 Days </h4>
+                    </div>
+                    <div class="card-body" style="width:100%;height:120%">
+                        <canvas id="myChart1"></canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Row for Views -->
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var views = {{ views }};
+        var predicted_views = {{ predicted_views }};
+        var dates ={{ dates|safe }};
+        var back = ['rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'];
+        var border = ['rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'];
+        var back1 = [];
+        var border1 = [];
+        var count_1 = {{ count_1 }};
+        for (var i = 1; i <= count_1 / 6; i++) {
+            for (var j = 0; j < 6; j++)
+                back1.push(back[j]);
+        }
+        for (var i = 1; i <= count_1 / 6; i++) {
+            for (var j = 0; j < 6; j++)
+                border1.push(border[j]);
+        }
+        var back2 = []
+        var border2 = []
+        for (var i = 0; i < back1.length; i++) {
+            back2.push(back1[i]);
+            border2.push(border1[i]);
+        }
+        back1.reverse();
+        border1.reverse();
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "# Predicted Views",
+                    data: predicted_views,
+                    type: "line",
+                    backgroundColor: back1,
+                    borderColor: border1,
+                    borderWidth: 1,
+                    fill: false
+                },
+                    {
+                        label: "# Actual Views",
+                        data: views,
+                        type: "bar",
+                        backgroundColor: back2,
+                        borderColor: border2,
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart1").getContext('2d');
+        var views = {{ predicted_for_next_30 }};
+        var dates ={{ predicted_dates|safe }};
+        var back = ['rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'];
+        var border = ['rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'];
+        var back1 = [];
+        var border1 = [];
+        var count_1 = {{ count_1 }};
+        for (var i = 1; i <= 5; i++) {
+            for (var j = 0; j < 6; j++)
+                back1.push(back[j]);
+        }
+        for (var i = 1; i <= 5; i++) {
+            for (var j = 0; j < 6; j++)
+                border1.push(border[j]);
+        }
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "# Predicted Views",
+                    data: views,
+                    backgroundColor: back1,
+                    borderColor: border1,
+                    borderWidth: 1,
+
+                },
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}

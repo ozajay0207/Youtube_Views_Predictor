@@ -56,14 +56,8 @@
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
                             class="hide-menu">Charts</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="chart-flot.html">Views Count</a></li>
-                            <li><a href="chart-morris.html">Subscribers Count</a></li>
-                            <!-- <li><a href="chart-chartjs.html"></a></li> -->
-                            <!-- <li><a href="chart-chartist.html">Chartist </a></li> -->
-                            <!-- <li><a href="chart-amchart.html">AmChart</a></li> -->
-                            <!-- <li><a href="chart-echart.html">EChart</a></li> -->
-                            <!-- <li><a href="chart-sparkline.html">Sparkline</a></li> -->
-                            <!-- <li><a href="chart-peity.html">Peity</a></li> -->
+                            <li><a href="/channel/dashboard/views_analysis/{{ Channel_Main_Data.id }}/">Views Analysis</a></li>
+                            <li><a href="chart-morris.html">Subscribers Analysis</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
@@ -245,7 +239,7 @@
             <div class="col-lg-6">
                 <div class="card" style="height: 94%">
                     <div class="card-title">
-                        <h4>Daily Views Increment for Last 7 Days</h4>
+                        <h4>Daily Subscribers Increment for Last 7 Days</h4>
                     </div>
                     <div class="card-body" style="width:100%;height:200%">
                         <canvas id="myChart1"></canvas>

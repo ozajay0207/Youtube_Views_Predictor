@@ -17,7 +17,6 @@ def Sign_Up(request):
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
-		print("Hii")
         return render(request, 'users/Users_Dashboard.html', {'User_Detail':User_Detail})
     else:
         if request.method == 'POST':

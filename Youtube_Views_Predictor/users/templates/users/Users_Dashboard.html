@@ -19,6 +19,7 @@
                     <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
                 </div>
             </a>
+
             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                 <ul class="dropdown-user">
                     <li><a href="#"><i class="ti-user"></i> Profile</a></li>
@@ -31,5 +32,249 @@
     {% endif %}
 {% endblock %}
 {% block body %}
- <h1>DASHBOARD</h1>
+
+
+    <!-- Left Sidebar  -->
+    <div class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="nav-devider"></li>
+
+                    <li><img
+                            src="https://yt3.ggpht.com/-8ZnBMvGyRbQ/AAAAAAAAAAI/AAAAAAAAAAA/_Hp2swLOznQ/s288-mo-c-c0xffffffff-rj-k-no/photo.jpg"
+                            height="10%" width="100%"></li>
+                    <li class="nav-label"><h3>{{ User_Detail.Display_Name }}</h3></li>
+                    <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
+                    <!-- <ul aria-expanded="false" class="collapse"> -->
+                    <!-- <li><a href="index.html">Ecommerce </a></li> -->
+                    <!-- <li><a href="index1.html">Analytics </a></li> -->
+                    <!-- </ul> -->
+                    <!-- </li> -->
+                    <li class="nav-label">Statistics</li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
+                            class="hide-menu">Charts</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="chart-flot.html">Views Count</a></li>
+                            <li><a href="chart-morris.html">Subscribers Count</a></li>
+                            <!-- <li><a href="chart-chartjs.html"></a></li> -->
+                            <!-- <li><a href="chart-chartist.html">Chartist </a></li> -->
+                            <!-- <li><a href="chart-amchart.html">AmChart</a></li> -->
+                            <!-- <li><a href="chart-echart.html">EChart</a></li> -->
+                            <!-- <li><a href="chart-sparkline.html">Sparkline</a></li> -->
+                            <!-- <li><a href="chart-peity.html">Peity</a></li> -->
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
+                            class="hide-menu">Tables</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="table-bootstrap.html">Views Count</a></li>
+                            <li><a href="table-datatable.html">Subscribers Count</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </div>
+    <!-- End Left Sidebar  -->
+    <!-- Page wrapper  -->
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Dashboard</h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+        <!-- Container fluid  -->
+        <div class="container-fluid">
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <h1>Enter youtube URL
+                            <here class="."></here>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End PAge Content -->
+        </div>
+        <!-- End Container fluid  -->
+        <!-- Row for Views -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h2>Channels Under Analysis:</h2>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <table class="table">
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Channel Name</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Channel Name</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h2>Videos Under Analysis:</h2>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <table class="table">
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Video 1</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Video 2</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                                <tr>
+                                    <td>3.</td>
+                                    <td>Video 3</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                                <tr>
+                                    <td>4.</td>
+                                    <td>Video 4</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                                <tr>
+                                    <td>5.</td>
+                                    <td>Video 5</td>
+                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+            </div>
+            <!-- /# column -->
+
+            <!-- End Row for Views -->
+            <!-- Row for Subscribers -->
+            <!-- End Row for Suscribers -->
+            <!-- footer -->
+
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <!-- chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+                datasets: [{
+                    label: '# of Views',
+                    data: [11000, 11600, 13000, 15000, 22000, 30000, 35000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart1").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+                datasets: [{
+                    label: '# of Subscribers',
+                    data: [1000, 1500, 1700, 1800, 2000, 5000, 9000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
 {% endblock %}

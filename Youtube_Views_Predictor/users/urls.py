@@ -14,4 +14,7 @@ urlpatterns = [
     url(r'^register/$',views.register,name='Register'),
     url(r'^validate_email/$',views.validate_email,name='vaidate_email'),
     url(r'^validate_display_name/$',views.validate_display_name,name='vaidate_display_name'),
+    url(r'^get_data/$',views.get_data,name="get_data"),
+    url(r'^dashboard/channel/+(?P<channel_id>\d+)/$',views.view_channel_dashboard,name="view_dashboard"),
+    #url(r'^get_data/$',views.get_data,name="get_data"),
 ]

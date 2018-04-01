@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from users.models import users
-#from Crypto.Hash import SHA256
+from Crypto.Hash import SHA256
 # Create your views here.
 
 def DashBoard(request):
@@ -23,7 +23,7 @@ def Sign_Up(request):
             Email=request.POST.get('val-email')
             Display_Name=request.POST.get('val-display-name')
             Password=request.POST.get('val-password')
- #           Password_Hash=SHA256.new(Password.encode('utf-8')).hexdigest()
+            Password_Hash=SHA256.new(Password.encode('utf-8')).hexdigest()
             user1= users(Email=Email,Display_Name=Display_Name,Password=Password)
             user1.save()
             request.session['User_Id']=user1.id
@@ -44,7 +44,7 @@ def Sign_In(request):
         if request.method == 'POST':
             Email = request.POST.get('val-email')
             Password = request.POST.get('val-password')
- #           Password_Hash = SHA256.new(Password.encode('utf-8')).hexdigest()
+            Password_Hash = SHA256.new(Password.encode('utf-8')).hexdigest()
             try:
                 user1=users.objects.get(Email=Email,Password=Password)
                 request.session['User_Id']=user1.id

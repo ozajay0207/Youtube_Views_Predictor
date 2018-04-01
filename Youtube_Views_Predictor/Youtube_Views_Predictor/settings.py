@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'Youtube_Views_Predictor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'yvp1',
+        'NAME': 'yvp4',
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost',

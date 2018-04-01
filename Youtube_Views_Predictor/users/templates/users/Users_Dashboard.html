@@ -34,56 +34,8 @@
 {% block body %}
 
 
-    <!-- Left Sidebar  -->
-    <div class="left-sidebar">
-        <!-- Sidebar scroll-->
-        <div class="scroll-sidebar">
-            <!-- Sidebar navigation-->
-            <nav class="sidebar-nav">
-                <ul id="sidebarnav">
-                    <li class="nav-devider"></li>
-
-                    <li><img
-                            src="https://yt3.ggpht.com/-8ZnBMvGyRbQ/AAAAAAAAAAI/AAAAAAAAAAA/_Hp2swLOznQ/s288-mo-c-c0xffffffff-rj-k-no/photo.jpg"
-                            height="10%" width="100%"></li>
-                    <li class="nav-label"><h3>{{ User_Detail.Display_Name }}</h3></li>
-                    <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
-                    <!-- <ul aria-expanded="false" class="collapse"> -->
-                    <!-- <li><a href="index.html">Ecommerce </a></li> -->
-                    <!-- <li><a href="index1.html">Analytics </a></li> -->
-                    <!-- </ul> -->
-                    <!-- </li> -->
-                    <li class="nav-label">Statistics</li>
-                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
-                            class="hide-menu">Charts</span></a>
-                        <ul aria-expanded="false" class="collapse">
-                            <li><a href="chart-flot.html">Views Count</a></li>
-                            <li><a href="chart-morris.html">Subscribers Count</a></li>
-                            <!-- <li><a href="chart-chartjs.html"></a></li> -->
-                            <!-- <li><a href="chart-chartist.html">Chartist </a></li> -->
-                            <!-- <li><a href="chart-amchart.html">AmChart</a></li> -->
-                            <!-- <li><a href="chart-echart.html">EChart</a></li> -->
-                            <!-- <li><a href="chart-sparkline.html">Sparkline</a></li> -->
-                            <!-- <li><a href="chart-peity.html">Peity</a></li> -->
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
-                            class="hide-menu">Tables</span></a>
-                        <ul aria-expanded="false" class="collapse">
-                            <li><a href="table-bootstrap.html">Views Count</a></li>
-                            <li><a href="table-datatable.html">Subscribers Count</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
-            </nav>
-            <!-- End Sidebar navigation -->
-        </div>
-        <!-- End Sidebar scroll-->
-    </div>
-    <!-- End Left Sidebar  -->
     <!-- Page wrapper  -->
-    <div class="page-wrapper">
+    <div class="bg-light">
         <!-- Bread crumb -->
         <div class="row page-titles">
             <div class="col-md-5 align-self-center">
@@ -102,8 +54,36 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <h1>Enter youtube URL
-                            <here class="."></here>
+                        <h1>
+                            <form action="/users/get_data/" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                <div class="col-lg-1 mr-5">
+                                    <select class="dropdown dropdown-header " name="type">
+                                                <option class="dropdown-header">
+                                                    Video
+                                                </option>
+                                                <option class="dropdown-header">
+                                                    Channel
+                                                </option>
+                                            </select>
+                                </div>
+                                <div  class="col-lg-3">
+                                    <input type="text" class="form-control form-control-lg"
+                                                               name="name" id="name"
+                                                               placeholder="Enter Channel/Video name">
+                                </div>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control form-control-lg"
+                                                               name="search" id="search"
+                                                               placeholder="Enter YouTube URL here">
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn btn-primary lg"><i class="fa fa-search">
+                                                Get Data </i></button>
+                                </div>
+                                    </div>
+                                </form>
                         </h1>
                     </div>
                 </div>
@@ -124,15 +104,30 @@
                         <div class="card-body" style="width:100%;height:120%">
                             <table class="table">
                                 <tr>
-                                    <td>1.</td>
-                                    <td>Channel Name</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                    <th></th>
+                                    <th>Channel Name</th>
+                                    <th>View Count</th>
+                                    <th>Subscribers</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Channel Name</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
-                                </tr>
+                                {% for c,c1 in channel_details %}
+                                    {{ c.analysis_status }}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td width="40%">{{ c.channel_name }}</td>
+                                        <td width="20%">{{ c1.view_count }}</td>
+                                        <td width="20%">{{ c1.subscriber_count }}</td>
+                                        {% if c.analysis_status == True %}
+                                            <td width="10%"><input type="button" class="btn btn-primary" value="Stop"/>
+                                            </td>
+                                        {% else %}
+                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
+                                        {% endif %}
+                                        <td width="10%"><input type="button" class="btn btn-primary"
+                                                               value="View Analysis"/></td>
+                                    </tr>
+                                {% endfor %}
                             </table>
                         </div>
                     </div>
@@ -148,30 +143,27 @@
                         <div class="card-body" style="width:100%;height:120%">
                             <table class="table">
                                 <tr>
-                                    <td>1.</td>
-                                    <td>Video 1</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
+                                    <th></th>
+                                    <th>Video Name</th>
+                                    <th>Category</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Video 2</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
-                                </tr>
-                                <tr>
-                                    <td>3.</td>
-                                    <td>Video 3</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
-                                </tr>
-                                <tr>
-                                    <td>4.</td>
-                                    <td>Video 4</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
-                                </tr>
-                                <tr>
-                                    <td>5.</td>
-                                    <td>Video 5</td>
-                                    <td><input type="button" class="fc-button" value="View"/></td>
-                                </tr>
+                                {% for video in video_details %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td width="40%">{{ video.video_name }}</td>
+                                        <td width="40%">{{ video.category }}</td>
+                                        {% if video.analysis_status == True %}
+                                            <td width="10%"><input type="button" class="btn btn-primary" value="Stop"/>
+                                            </td>
+                                        {% else %}
+                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
+                                        {% endif %}
+                                        <td width="10%"><input type="button" class="btn btn-primary"
+                                                               value="View Analysis"/></td>
+                                    </tr>
+                                {% endfor %}
                             </table>
                         </div>
                     </div>

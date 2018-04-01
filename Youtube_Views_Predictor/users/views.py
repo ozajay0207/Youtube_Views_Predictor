@@ -1,6 +1,9 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from users.models import users
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from users.models import users,video_main,video_sub,user_channel_main,user_channel_sub
+import users.User_Video_Scraper as us
 #from Crypto.Hash import SHA256
 # Create your views here.
 
@@ -8,7 +11,11 @@ def DashBoard(request):
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
-        return render(request, 'users/Users_Dashboard.html', {'User_Detail':User_Detail})
+        video_main_obj = video_main.objects.filter(user_id=user1.pk)
+        channel_main_obj =user_channel_main.objects.filter(user_id=user1.pk)
+        channel_sub_obj = user_channel_sub.objects.filter(channel_id__in = channel_main_obj)
+        channel_obj = zip(channel_main_obj,channel_sub_obj)
+        return render(request, 'users/Users_Dashboard.html', {'User_Detail':User_Detail,'video_details':video_main_obj,'channel_details':channel_obj,})
     else:
         return HttpResponseRedirect('/Home/')
 
@@ -17,7 +24,7 @@ def Sign_Up(request):
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
-        return render(request, 'users/Users_Dashboard.html', {'User_Detail':User_Detail})
+        return render(request, 'users/Users_Dashboard.html', {'User_Detail':User_Detail,})
     else:
         if request.method == 'POST':
             Email=request.POST.get('val-email')
@@ -88,3 +95,20 @@ def validate_display_name(request):
         data = {}
 
     return render(request, 'users/search_result.html', {'data': data})
+
+@csrf_exempt
+def get_data(request):
+    if request.method == "POST":
+        url = request.POST.get("search")
+        name = request.POST.get("name")
+        type = request.POST.get("type")
+        if type == "Video":
+            final_url = url[url.rfind('=')+1:]
+
+            obj = us.get_video_details([final_url],name,type,url,request)
+        else:
+            pass
+
+        return HttpResponseRedirect(reverse(DashBoard))
+    else:
+        return HttpResponseRedirect(reverse(DashBoard))

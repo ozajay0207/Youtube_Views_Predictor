@@ -57,30 +57,56 @@
                             class="hide-menu">Views Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
                             {% if Channel_Sub_Data.count > 1 %}
-                            <li><a href="/channel/dashboard/views_analysis/current/{{ Channel_Main_Data.id }}/">Current Analysis</a></li>
+                                <li><a href="/channel/dashboard/views_analysis/current/{{ Channel_Main_Data.id }}/">Current
+                                    Analysis</a></li>
                             {% endif %}
-                            {% if  Channel_Sub_Data.count >= 7  %}
-                            <li><a href="/channel/dashboard/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly Analysis</a></li>
+                            {% if  Channel_Sub_Data.count >= 7 %}
+                                <li><a href="/channel/dashboard/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
+                                    Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 15 %}
-                            <li><a href="/channel/dashboard/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15 Days Analysis</a></li>
+                                <li><a href="/channel/dashboard/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
+                                    Days Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 30 %}
-                            <li><a href="/channel/dashboard/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly Analysis</a></li>
+                                <li><a href="/channel/dashboard/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
+                                    Analysis</a></li>
                             {% endif %}
                             {% if Channel_Sub_Data.count >= 1 %}
-                            <li><a href="/channel/dashboard/views_analysis/total/{{ Channel_Main_Data.id }}/">Total Analysis</a></li>
-                                {% else %}
+                                <li><a href="/channel/dashboard/views_analysis/total/{{ Channel_Main_Data.id }}/">Total
+                                    Analysis</a></li>
+                            {% else %}
                                 <li>Nothong To Show</li>
                             {% endif %}
 
                         </ul>
                     </li>
-                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span
-                            class="hide-menu">Tables</span></a>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
+                            class="hide-menu">Subscribers Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="table-bootstrap.html">Views Count</a></li>
-                            <li><a href="table-datatable.html">Subscribers Count</a></li>
+                            {% if Channel_Sub_Data.count > 1 %}
+                                <li><a href="/channel/dashboard/subs_analysis/current/{{ Channel_Main_Data.id }}/">Current
+                                    Analysis</a></li>
+                            {% endif %}
+                            {% if  Channel_Sub_Data.count >= 7 %}
+                                <li><a href="/channel/dashboard/subs_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
+                                    Analysis</a></li>
+                            {% endif %}
+                            {% if  Channel_Sub_Data.count >= 15 %}
+                                <li><a href="/channel/dashboard/subs_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
+                                    Days Analysis</a></li>
+                            {% endif %}
+                            {% if  Channel_Sub_Data.count >= 30 %}
+                                <li><a href="/channel/dashboard/subs_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
+                                    Analysis</a></li>
+                            {% endif %}
+                            {% if Channel_Sub_Data.count >= 1 %}
+                                <li><a href="/channel/dashboard/subs_analysis/total/{{ Channel_Main_Data.id }}/">Total
+                                    Analysis</a></li>
+                            {% else %}
+                                <li>Nothong To Show</li>
+                            {% endif %}
+
                         </ul>
                     </li>
 
@@ -110,33 +136,21 @@
         <div class="container-fluid">
             <!-- Start Page Content -->
             <div class="row">
-                <div class="col-md-3">
-                    <div class="card bg-primary p-30">
-                        <div class="media widget-ten">
-                            <div class="media-left meida media-middle">
-                                <span><i class="fa fa-usd f-s-40"></i></span>
-                            </div>
-                            <div class="media-body media-text-right">
-                                <h2 class="color-white">BAKI</h2>
-                                <p class="m-b-0">Total Earnings</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning p-30">
+
+                <div class="col-lg-4">
+                    <div class="card bg-info p-30">
                         <div class="media widget-ten">
                             <div class="media-left meida media-middle">
                                 <span><i class="fa fa-archive f-s-40"></i></span>
                             </div>
                             <div class="media-body media-text-right">
-                                <h2 class="color-white">BAKI</h2>
-                                <p class="m-b-0">Total Videos</p>
+                                <h2 class="color-white">{{ Channel_Main_Data.channel_category }}</h2>
+                                <p class="m-b-0">Category</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-4">
                     <div class="card bg-danger p-30">
                         <div class="media widget-ten">
                             <div class="media-left meida media-middle">
@@ -144,7 +158,7 @@
                             </div>
                             <div class="media-body media-text-right">
                                 {% for i in Channel_Sub_Data|slice:":1" %}
-                                <h2 class="color-white">{{ i.view_count }}</h2>
+                                    <h2 class="color-white">{{ i.view_count }}</h2>
                                 {% endfor %}
                                 <p class="m-b-0">Views</p>
                             </div>
@@ -152,7 +166,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-lg-4">
                     <div class="card bg-success p-30">
                         <div class="media widget-ten">
                             <div class="media-left meida media-middle">
@@ -160,7 +174,7 @@
                             </div>
                             <div class="media-body media-text-right">
                                 {% for i in Channel_Sub_Data|slice:":1" %}
-                                <h2 class="color-white">{{ i.subscriber_count }}</h2>
+                                    <h2 class="color-white">{{ i.subscriber_count }}</h2>
                                 {% endfor %}
                                 <p class="m-b-0">Subscribers</p>
                             </div>
@@ -171,108 +185,200 @@
 
 
             <!-- End PAge Content -->
-        </div>
-        <!-- End Container fluid  -->
-        <!-- Row for Views -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card" style="height: 94%">
-                    <div class="card-title">
-                        <h4>Daily Views Increment for Last 7 Days</h4>
-                    </div>
-                    <div class="card-body" style="width:100%;height:120%">
-                        <canvas id="myChart"></canvas>
 
+            <div class="row">
+
+                <div class="col-lg-3">
+                    <div class="card bg-pink p-30">
+                        <div class="media widget-ten">
+                            <!--<div class="media-left meida media-middle">
+                                <span><i class="fa fa-archive f-s-40"></i></span>
+                            </div>-->
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ increase_view }} </h2>
+                                <p class="m-b-0">Tomorrow's Views Increment</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- /# card -->
-            </div>
-            <!-- /# column -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-title">
-                        <h4>Views in Last 7 days</h4>
+                <div class="col-lg-3">
+                    <div class="card bg-success p-30">
+                        <div class="media widget-ten">
+                            <!--<div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>-->
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ acc_views }} %</h2>
+                                <p class="m-b-0">Accuracy on Last Week Views</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover ">
-                                <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Views</th>
-                                    <th>Daily Increase</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card bg-primary p-30">
+                        <div class="media widget-ten">
+                            <!--<div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>-->
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ increase_sub }}</h2>
+                                <p class="m-b-0">Tomorrow's Subs Increment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card bg-warning p-30">
+                        <div class="media widget-ten">
+                            <!--<div class="media-left meida media-middle">
+                                <span><i class="fa fa-user f-s-40"></i></span>
+                            </div>-->
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ acc_subs }} %</h2>
+                                <p class="m-b-0">Accuracy on Last Week Subs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End Container fluid  -->
+            <!-- Row for Views -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card" style="height: 94%">
+                        <div class="card-title">
+                            <h4>Last Week Views Daily Distribution</h4>
+                        </div>
+                        <div class="card-body" style="width:100%;height:200%">
+                            <canvas id="myChart2"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card" style="height: 94%">
+                        <div class="card-title">
+                            <h4>Daily Views Increment for Last 7 Days</h4>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <canvas id="myChart"></canvas>
+
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <!-- /# column -->
+                <div class="col-lg-6">
+                    <div class="card" style="height: 94%">
+                        <div class="card-title">
+                            <h4>Daily Subscribers Increment for Last 7 Days</h4>
+                        </div>
+                        <div class="card-body" style="width:100%;height:200%">
+                            <canvas id="myChart1"></canvas>
+
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="card" style="height: 94%">
+                        <div class="card-title">
+                            <h4>Last Week Subscribers Daily Distribution</h4>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <canvas id="myChart3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Row for Views -->
+            <!-- Row for Subscribers -->
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-title">
+                            <h4>Views in Last 7 days</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Views</th>
+                                        <th>Daily Increase</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     {% for v,i in table_view_increase|slice:":7" %}
-                                    <tr>
-                                        <td>{{ v.date1 }}</td>
-                                        <td>{{ v.view_count }}</td>
-                                        <td>{{ i }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                        <tr>
+                                            <td>{{ v.date1 }}</td>
+                                            <td>{{ v.view_count }}</td>
+                                            <td>{{ i }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- End Row for Views -->
-        <!-- Row for Subscribers -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-title">
-                        <h4>Subscribers in Last 7 days</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover ">
-                                <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Views</th>
-                                    <th>Daily Increase</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for v,i in table_sub_increase|slice:":7" %}
+
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-title">
+                            <h4>Subscribers in Last 7 days</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover ">
+                                    <thead>
                                     <tr>
-                                        <td>{{ v.date1 }}</td>
-                                        <td>{{ v.subscriber_count }}</td>
-                                        <td>{{ i }}</td>
+                                        <th>Date</th>
+                                        <th>Views</th>
+                                        <th>Daily Increase</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    {% for v,i in table_sub_increase|slice:":7" %}
+                                        <tr>
+                                            <td>{{ v.date1 }}</td>
+                                            <td>{{ v.subscriber_count }}</td>
+                                            <td>{{ i }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- /# column -->
+
             </div>
 
-            <!-- /# column -->
-            <div class="col-lg-6">
-                <div class="card" style="height: 94%">
-                    <div class="card-title">
-                        <h4>Daily Subscribers Increment for Last 7 Days</h4>
-                    </div>
-                    <div class="card-body" style="width:100%;height:200%">
-                        <canvas id="myChart1"></canvas>
+            <!-- End Row for Sbscribers -->
+            <!-- footer -->
 
-                    </div>
-                </div>
-                <!-- /# card -->
-            </div>
+            <!-- End footer -->
         </div>
-
-        <!-- End Row for Sbscribers -->
-        <!-- footer -->
-
-        <!-- End footer -->
+        <!-- End Page wrapper  -->
     </div>
-    <!-- End Page wrapper  -->
-    </div>
+
     <!-- End Wrapper -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
@@ -283,9 +389,10 @@
         var ctx = document.getElementById("myChart").getContext('2d');
         var views = {{ views }};
 
-        var dates = {{ dates|safe }}
+        var dates =
+        {{ dates|safe }}
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: dates,
                 datasets: [{
@@ -323,17 +430,20 @@
             }
         });
     </script>
+
     <script>
-        var ctx = document.getElementById("myChart1").getContext('2d');
-        var subs= {{ subs }}
-        var dates= {{ dates|safe }}
+        var ctx = document.getElementById("myChart2").getContext('2d');
+        var views = {{ views }};
+
+        var dates =
+        {{ dates|safe }}
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'pie',
             data: {
                 labels: dates,
                 datasets: [{
-                    label: '# of Subscribers',
-                    data: subs,
+                    label: '# of Views',
+                    data: views,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -351,7 +461,103 @@
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
                         'rgba(255,99,132,1)',
-                        ],
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById("myChart1").getContext('2d');
+        var subs =
+        {{ subs }}
+        var dates =
+        {{ dates|safe }}
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '# of Subscribers',
+                    data: subs,
+                    backgroundColor: [
+
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+
+    <script>
+        var ctx = document.getElementById("myChart3").getContext('2d');
+        var subs =
+        {{ subs }}
+        var dates =
+        {{ dates|safe }}
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '# of Subscribers',
+                    data: subs,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                    ],
                     borderWidth: 1
                 }]
             },

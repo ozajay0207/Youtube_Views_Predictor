@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% block left_drawer %}
+    <li class="nav-item"><a class="nav-link nav-toggler hidden-md-up text-muted  "
+                            href="javascript:void(0)"><i class="mdi mdi-menu"></i></a></li>
+    <li class="nav-item m-l-10"><a class="nav-link sidebartoggler hidden-sm-down text-muted  "
+                                   href="javascript:void(0)"><i class="ti-menu"></i></a></li>
+{% endblock %}
+{% block user %}
+
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <!-- Left Sidebar  -->
+    <div class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="nav-label"><a href="/users/">Back To Dashboard</a></li>
+                    <li class="nav-devider"></li>
+                    <li class="nav-label"><h3>{{ uvmain.video_name }}</h3></li>
+                    <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
+                    <!-- <ul aria-expanded="false" class="collapse"> -->
+                    <!-- <li><a href="index.html">Ecommerce </a></li> -->
+                    <!-- <li><a href="index1.html">Analytics </a></li> -->
+                    <!-- </ul> -->
+                    <!-- </li> -->
+                    <li class="nav-label">Statistics</li>
+                    <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
+                            class="hide-menu">Views Analysis</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li>Nothong To Show</li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </div>
+    <!-- End Left Sidebar  -->
+    <!-- Page wrapper  -->
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Dashboard</h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/users/">User</a></li>
+                    <li class="breadcrumb-item"><a href="/users/">Dashboard</a></li>
+                    <li class="breadcrumb-item active">View Analysis</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+        <!-- Container fluid  -->
+        <div class="container-fluid">
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="alert alert-warning col-lg-12">
+                    {{ status }}
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="card bg-info p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="fa fa-archive f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ uvmain.category }}</h2>
+                                <p class="m-b-0">Category</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card bg-danger p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                <h2 class="color-white">{{ uvmain.publish_date }}</h2>
+                                <p class="m-b-0">Published Date</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-4">
+                    <div class="card bg-pink p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="fa fa-archive f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                {% for i in uvsub|slice:":1" %}
+                                <h2 class="color-white">{{ i.view }}</h2>
+                                {% endfor %}
+                                <p class="m-b-0">Views</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card bg-warning p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                {% for i in uvsub|slice:":1" %}
+                                <h2 class="color-white">{{ i.likes }}</h2>
+                                {% endfor %}
+
+                                <p class="m-b-0">Likes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card bg-success p-30">
+                        <div class="media widget-ten">
+                            <div class="media-left meida media-middle">
+                                <span><i class="ti-location-pin f-s-40"></i></span>
+                            </div>
+                            <div class="media-body media-text-right">
+                                {% for i in uvsub|slice:":1" %}
+                                <h2 class="color-white">{{ i.dislikes }}</h2>
+                                {% endfor %}
+
+                                <p class="m-b-0">DisLikes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h4>Your Available Data</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover ">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Views</th>
+                                        <th>Likes</th>
+                                        <th>Dislikes</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i,j,k,l in user_view_table %}
+                                        <tr>
+                                            <td>{{ i }}</td>
+                                            <td>{{ j }}</td>
+                                            <td>{{ k }}</td>
+                                            <td>{{ l }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /# column -->
+                <div class="col-lg-6">
+                </div>
+                <!-- End Row for table -->
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}

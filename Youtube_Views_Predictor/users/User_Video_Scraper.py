@@ -122,11 +122,16 @@ def get_video_details(V_id,name,type,url1,request):
     category_no =data['categoryId']
     category = category_dict[int(category_no[0])]
     print(view_count,like_count,dislike_count,publish_date[0][:10],category)
-    obj=video_main(video_name=name,category=category,youtube_url=url1,publish_date=publish_date,analysis_status=True,user_id=users.objects.get(pk=request.session['User_Id']))
-    obj.save()
-    obj1=video_sub(video_main_id=obj,date1=datetime.now().strftime('%Y-%m-%d'),view=int(view_count[0]),likes=int(like_count[0]),dislikes=int(dislike_count[0]))
-    obj1.save()
-
-	    #print("\n",k,"\n",v,"\n")
+    try:
+        getobj=video_main.objects.get(youtube_url=url1,user_id=users.objects.get(pk=request.session['User_Id']))
+        getobj1=video_sub.objects.get(video_main_id=getobj,date1=datetime.now().strftime('%Y-%m-%d'))
+        return True,getobj.pk,getobj1.pk
+    except:
+        obj=video_main(video_name=name,category=category,youtube_url=url1,publish_date=publish_date,analysis_status=True,user_id=users.objects.get(pk=request.session['User_Id']))
+        obj.save()
+        obj1=video_sub(video_main_id=obj,date1=datetime.now().strftime('%Y-%m-%d'),view=int(view_count[0]),likes=int(like_count[0]),dislikes=int(dislike_count[0]))
+        obj1.save()
+        return True,obj.pk,obj1.pk
+	#print("\n",k,"\n",v,"\n")
 	
 #    print(data)

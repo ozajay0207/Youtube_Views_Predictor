@@ -41,33 +41,36 @@
             <!-- Sidebar navigation-->
             <nav class="sidebar-nav">
                 <ul id="sidebarnav">
-                    <li><a href="/users/" aria-expanded="false"><i class="fa fa-angle-double-left"></i>
-                        <span class="hide-menu">Back to Channel Dashboard</span></a></li>
                     <li class="nav-devider"></li>
 
-                    <li class="nav-label"><h3>{{ Channel_Main_Data.video_name }}</h3></li>
+                    <li><img src="{{ Channel_Main_Data.channel_image_url }}" height="10%" width="100%"></li>
+                    <li class="nav-label"><h3>{{ Channel_Main_Data.channel_name }}</h3></li>
                     <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard <span class="label label-rouded label-primary pull-right">2</span></span></a> -->
                     <!-- <ul aria-expanded="false" class="collapse"> -->
                     <!-- <li><a href="index.html">Ecommerce </a></li> -->
                     <!-- <li><a href="index1.html">Analytics </a></li> -->
                     <!-- </ul> -->
                     <!-- </li> -->
-
+                    <li><a href="/channel/dashboard/{{ Channel_Main_Data.id }}/" aria-expanded="false"><i class="fa fa-angle-double-left"></i><span
+                            class="hide-menu">Back to Channel Dashboard</span></a>
                     <li class="nav-label">Statistics</li>
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
                             class="hide-menu">Views Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
+                            {% if Channel_Sub_Data.count > 1 %}
+                            <li><a href="/channel/dashboard/views_analysis/current/{{ Channel_Main_Data.id }}/">Current Analysis</a></li>
+                            {% endif %}
                             {% if  Channel_Sub_Data.count >= 7  %}
-                            <li><a href="/users/dashboard/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly Analysis</a></li>
+                            <li><a href="/channel/dashboard/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 15 %}
-                            <li><a href="/users/dashboard/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15 Days Analysis</a></li>
+                            <li><a href="/channel/dashboard/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15 Days Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 30 %}
-                            <li><a href="/users/dashboard/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly Analysis</a></li>
+                            <li><a href="/channel/dashboard/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly Analysis</a></li>
                             {% endif %}
                             {% if Channel_Sub_Data.count >= 1 %}
-                            <li><a href="/users/dashboard/views_analysis/total/{{ Channel_Main_Data.id }}/">Total Analysis</a></li>
+                            <li><a href="/channel/dashboard/views_analysis/total/{{ Channel_Main_Data.id }}/">Total Analysis</a></li>
                                 {% else %}
                                 <li>Nothong To Show</li>
                             {% endif %}
@@ -105,7 +108,6 @@
                 </ol>
             </div>
         </div>
-        <div class="container-fluid">
         <!-- End Bread crumb -->
         <!-- Row for increase -->
         <div class="row">

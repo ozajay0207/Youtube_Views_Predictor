@@ -42,37 +42,23 @@
         </div>
     </div>
     <div class="container">
-    <div class="row">
-    {% for channel in Channel_List %}
-<<<<<<< HEAD
-        <div class="col-sm-6 col-md-6 col-xs-12 col-lg-3">
-        <div class="card border-secondary" style="border-width: 1px">
-            <img class="card-img-top img-responsive align-self-center" src="{{ channel.channel_img_url }}" style="height: 200px;width: 200px;">
-            <br />
-            <div class="card-body" style="min-height: 90px;">
-                <h3 class="card-title" >{{ channel.channel_name }}</h3>
-                <i class="card-subtitle">{{ channel.channel_category }}</i>
-
-=======
-        <div>
-            <div class="card p-20" style="background: rgba(229,229,229,1.0);margin-left:5%;margin-right: 5%">
-                <div class="media widget-ten">
-                    <div class="media-left meida media-middle">
-                        <img src="{{ channel.channel_img_url }}">
-                    </div>
-                    <div class="media-body media-text-left" style="margin: 1%">
-                        <a href="/channel/dashboard/{{ channel.pk }}/"><h2>{{ channel.channel_name }}</h2></a>
-                    </div>
-                    <div class="media-body media-text-right" style="margin: 1%">
-                        <a href="/channel/dashboard/{{ channel.pk }}/"><h3><u>View Analysis</u></h3></a>
+        <div class="row">
+            {% for channel in Channel_List %}
+                <div class="col-sm-6 col-md-6 col-xs-12 col-lg-3">
+                    <div class="card border-secondary" style="border-width: 1px">
+                        <img class="card-img-top img-responsive align-self-center" src="{{ channel.channel_img_url }}"
+                             style="height: 200px;width: 200px;">
+                        <br/>
+                        <div class="card-body" style="min-height: 90px;">
+                            <h3 class="card-title">{{ channel.channel_name }}</h3>
+                            <i class="card-subtitle">{{ channel.channel_category }}</i>
+                            <div>
+                                <a href="/channel/dashboard/{{ channel.pk }}/" class="btn btn-primary">View Analysis</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
->>>>>>> 4db3231902eb5cafdb5c9a864fa8166431c02279
-            </div>
-            <a href="/channel/dashboard/{{ channel.pk }}/" class="btn btn-primary">View Analysis</a>
+            {% endfor %}
         </div>
-</div>
-    {% endfor %}
     </div>
-</div>
 {% endblock %}

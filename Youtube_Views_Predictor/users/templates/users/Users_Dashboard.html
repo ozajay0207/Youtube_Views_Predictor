@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% block head %}
 
+{% endblock %}
 {% block left_drawer %}
 {% endblock %}
+
+
+
 {% block user %}
 
     {% if User_Detail == '' %}
@@ -33,7 +38,33 @@
 {% endblock %}
 {% block body %}
 
+    <script>
+        function call_modal() {
+            var flag=1;
+            if (document.getElementById("search").value == "") {
+                flag=0;
+                document.getElementById("message").innerHTML = "";
+                document.getElementById("message").innerHTML += "Please Enter a URL";
 
+                $('#validationModal').modal('show');
+            }
+            if (flag == 1) {
+                $('#successModal').modal('show');
+            }
+            return true;
+        }
+         $(function () {
+            $('#successModal').on('show.bs.modal', function () {
+                var myModal = $(this);
+                clearTimeout(myModal.data('hideInterval'));
+                myModal.data('hideInterval', setTimeout(function () {
+                    myModal.modal('hide');
+                    document.course_form.submit();
+                }, 1500));
+            });
+        });
+    </script>
+    <div>
     <!-- Page wrapper  -->
     <div class="bg-light">
         <!-- Bread crumb -->
@@ -79,7 +110,7 @@
                                                                placeholder="Enter YouTube URL here">
                                 </div>
                                 <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-primary lg"><i class="fa fa-search">
+                                    <button type="button" class="btn btn-primary lg" onclick="return call_modal()"><i class="fa fa-search">
                                                 Get Data </i></button>
                                 </div>
                                     </div>
@@ -179,11 +210,14 @@
         </div>
         <!-- End Page wrapper  -->
     </div>
+
+    </div>
     <!-- chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
     <script>
         var ctx = document.getElementById("myChart").getContext('2d');
         var myChart = new Chart(ctx, {
@@ -266,5 +300,30 @@
             }
         });
     </script>
-
+    <div class="mymodal">
+    <div id="successModal" class="modal fade">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Success
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="validationModal" class="modal fade">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    WARNING
+                </div>
+                <div class="modal-body">
+                    <div id="message"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 {% endblock %}

@@ -111,7 +111,7 @@
                             </div>
                             <div class="media-body media-text-right">
                                 {% for i in ucsub|slice:":1" %}
-                                <h2 class="color-white">{{ i.view }}</h2>
+                                <h2 class="color-white">{{ i.view_count }}</h2>
                                 {% endfor %}
                                 <p class="m-b-0">Views</p>
                             </div>
@@ -126,7 +126,7 @@
                             </div>
                             <div class="media-body media-text-right">
                                 {% for i in ucsub|slice:":1" %}
-                                <h2 class="color-white">{{ i.subscribers }}</h2>
+                                <h2 class="color-white">{{ i.subscriber_count }}</h2>
                                 {% endfor %}
 
                                 <p class="m-b-0">Subscribers</p>

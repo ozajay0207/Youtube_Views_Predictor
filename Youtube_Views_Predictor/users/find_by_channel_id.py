@@ -11,7 +11,7 @@ url = "https://socialblade.com/youtube/top/5000"
 # driver1.get(url)
 # output_file = open('youtube_data_' + str(datetime.datetime.now().strftime('%H_%M_%S')) + '.json', 'w', encoding='utf-8')
 # final_data = []
-conn = psycopg2.connect(database="yvp4", user="postgres", password="admin")
+conn = psycopg2.connect(database="yvp4", user="postgres", password="harshit24")
 cur = conn.cursor()
 
 

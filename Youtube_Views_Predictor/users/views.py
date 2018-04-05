@@ -19,9 +19,9 @@ def DashBoard(request):
         User_Detail = user1
         video_main_obj = video_main.objects.filter(user_id=user1.pk)
         channel_main_obj = user_channel_main.objects.filter(user_id=user1.pk)
-        print(channel_main_obj)
+        # print(channel_main_obj)
         channel_sub_obj = user_channel_sub.objects.filter(channel_id__in=channel_main_obj)
-        print(channel_sub_obj)
+        # print(channel_sub_obj)
         channel_obj = zip(channel_main_obj, channel_sub_obj)
         return render(request, 'users/Users_Dashboard.html',
                       {'User_Detail': User_Detail, 'video_details': video_main_obj, 'channel_details': channel_obj, })
@@ -88,7 +88,7 @@ def register(request):
 
 
 def validate_email(request):
-    print("validate")
+    # print("validate")
     Email = request.GET.get('val-email')
     data = {
         'is_taken': users.objects.get(Email__iexact=Email).exists()
@@ -101,7 +101,7 @@ def validate_email(request):
 def validate_display_name(request):
     if request.method == "POST":
         query = request.POST.get('val-display-name')
-        print(query)
+        # print(query)
         if query == '':
             return render(request, 'users/search_result.html', {'data': 'None'})
         else:
@@ -128,221 +128,25 @@ def get_data(request):
                 User_Detail = user1
                 uvmain = video_main.objects.get(user_id=user1.pk, id=mainid)
                 uvsub = video_sub.objects.filter(video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
-                if len(uvsub) > 7:
-                    if len(uvsub) < 20:
-                        channel_main_data = video_main.objects.get(user_id=user1.pk, id=mainid)
-                        channel_sub_data = user_channel_sub.objects.filter(
-                            video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
-                        channel_sub_data1 = user_channel_sub.objects.filter(
-                            video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
-                        old_dates = []
-                        old_views = []
-                        increse_in_old_views = [0]
-                        count_1 = 0
-                        for k in channel_sub_data1:
-                            if count_1 == 0:
-                                old_views.append(k.view_count)
-                                old_dates.append(k.date1)
-                            else:
-                                increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
-                                old_views.append(k.view_count)
-                                old_dates.append(k.date1)
-                            count_1 = count_1 + 1
-                        print(increse_in_old_views)
-
-                        # prediction for all available old views
-                        V1 = old_views[:len(old_views) - 1]
-                        X1 = []
-                        for i in range(len(V1)):
-                            X1.append(i)
-                        actual = old_views[-1]
-                        p3 = polyfit(X1, V1, 3)
-                        p4 = polyfit(X1, V1, 4)
-                        p5 = polyfit(X1, V1, 5)
-                        predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
-                        predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
-                                                                                                                         3] * len(
-                            uvsub) + p4[4]
-                        predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
-                                                                                                                         3] * len(
-                            uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
-
-                        accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
-                        accuracy_p4 = 100 - abs((predicted_p3 - actual) / actual) * 100
-                        accuracy_p5 = 100 - abs((predicted_p3 - actual) / actual) * 100
-                        best = []
-                        predicted_old_views = []
-                        if accuracy_p3 > accuracy_p4:
-                            if accuracy_p3 > accuracy_p5:
-                                for i in range(len(old_views)):
-                                    predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
-                                    best.append("p3")
-                            else:
-                                predicted_old_views.append(
-                                    p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[
-                                        5])
-                                best.append("p5")
-                        else:
-                            if predicted_p4 > predicted_p5:
-                                predicted_old_views.append(p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
-                                best.append("p5")
-                            else:
-                                predicted_old_views.append(
-                                    p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[
-                                        5])
-                                best.append("p5")
-
-                        # old views,old_views_increment,prediction_old,accuracy
-                        accuracy_in_old_views = []
-                        for i in range(len(old_views)):
-                            accuracy_in_old_views.append(
-                                100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
-
-                        # prediction for next 30 days
-                        predicted_for_next_30 = []
-                        for i in range(len(old_views) + 1, len(old_views) + 7, 1):
-                            if best[0] == "p3":
-                                predicted_for_next_30.append(p3[0] * i**3 + p3[1] * i**2 + p3[2] * i + p3[3])
-                            elif best[0] == "p4":
-                                predicted_for_next_30.append(p4[0] * i ** 4 + p4[1] * i**3 + p4[2] * i**2 + p4[3] * i + p4[4])
-                            else:
-                                predicted_for_next_30.append(p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-                        predicted_dates = []
-                        for i in range(7):
-                            if i == 0:
-                                d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
-                                y = d + timedelta(days=1)
-                                predicted_dates.append(y.strftime("%Y-%m-%d"))
-                            else:
-                                d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
-                                y = d + timedelta(days=1)
-                                predicted_dates.append(y.strftime("%Y-%m-%d"))
-
-                        increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
-
-                        # print(len(predicted_dates),len(predicted_for_next_30))
-                        # for i,j in zip(views,predicted_old_views):
-                        #    print(i,j)
-
-                        old_views1 = old_views
-                        increse_in_old_views1 = increse_in_old_views
-                        predicted_old_views1 = predicted_old_views
-                        old_dates1 = old_dates
-                        accuracy_in_old_views1 = accuracy_in_old_views
-                        print(accuracy_in_old_views1)
-                        old_views1 = old_views1[::-1]
-                        increse_in_old_views1 = increse_in_old_views1[::-1]
-                        predicted_old_views1 = predicted_old_views1[::-1]
-                        old_dates1 = old_dates1[::-1]
-                        accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-                        avg_accuracy = average(accuracy_in_old_views)
-                        print('%.5f' % (avg_accuracy))
-
-                        if 'User_Id' in request.session:
-                            user1 = users.objects.get(pk=request.session['User_Id'])
-                            User_Detail = user1
-                            return render(request, 'users/user_views_analysis.html',
-                                          {'User_Detail': User_Detail, 'Channel_Main_Data': uvmain,
-                                           'old_views': old_views,
-                                           'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                           'count_1': count_1,
-                                           'predicted_for_next_30': predicted_for_next_30,
-                                           'predicted_dates': predicted_dates,
-                                           'increse_in_old_views': increse_in_old_views,
-                                           'increase_in_predicted_views': increase_in_predicted_views,
-                                           'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                                  predicted_old_views1,
-                                                                  accuracy_in_old_views1),
-                                           'avg_accuracy': avg_accuracy,
-                                           'Channel_Sub_Data': channel_sub_data,
-                                           'type': 'Total',
-                                           'label1': 'Increments in Views',
-                                           'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                           'label3': 'Accuracy On Previous Data Available',
-                                           'label4': 'Total Views for of Previous Data Available',
-                                           'label5': 'Predicted Views for Next 7 Days',
-                                           'label6': 'History of Previous Predictions'})
-                        else:
-                            return render(request, 'users/user_views_analysis.html',
-                                          {'User_Detail': '', 'Channel_Main_Data': channel_main_data,
-                                           'old_views': old_views,
-                                           'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                           'count_1': int(count_1),
-                                           'predicted_for_next_30': predicted_for_next_30,
-                                           'predicted_dates': predicted_dates,
-                                           'increse_in_old_views': increse_in_old_views,
-                                           'increase_in_predicted_views': increase_in_predicted_views,
-                                           'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                                  predicted_old_views1,
-                                                                  accuracy_in_old_views1),
-                                           'avg_accuracy': avg_accuracy,
-                                           'Channel_Sub_Data': channel_sub_data,
-                                           'type': 'Total',
-                                           'label1': 'Increments in Views',
-                                           'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                           'label3': 'Accuracy On Previous Data Available',
-                                           'label4': 'Total Views for of Previous Data Available',
-                                           'label5': 'Predicted Views for Next 7 Days',
-                                           'label6': 'History of Previous Predictions'})
-
-                        '''X = []
-                        for i in range(1, len(uvsub)):
-                            X.append(i)
-                        Y=[]
-                        for i in uvsub:
-                            Y.append(i.view)
-                        actual=uvsub[-1].view
-                        p3 = polyfit(X, Y, 3)
-                        p4 = polyfit(X, Y, 4)
-                        p5 = polyfit(X, Y, 5)
-                        predicted_p3= p3[0] * len(uvsub)**3 + p3[1] * len(uvsub)**2 + p3[2] * len(uvsub) + p3[3]
-                        predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[3] * len(uvsub) + p4[4]
-                        predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3+ p5[3] * len(uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
-
-                        accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual)*100
-                        accuracy_p4 = 100 - abs((predicted_p3 - actual) / actual) * 100
-                        accuracy_p5 = 100 - abs((predicted_p3 - actual) / actual) * 100
-                        best=[]
-                        if accuracy_p3 > accuracy_p4:
-                            if accuracy_p3 > accuracy_p5:
-                                best.append("p3")
-                            else:
-                                best.append("p5")
-                        else:
-                            if predicted_p4 > predicted_p5:
-                                best.append("p4")
-                            else:
-                                best.append("p5")
-
-                        if best[0] == 'p3':
-                            predicted_tomorrow = p3[0] * (len(uvsub)+1) ** 3 + p3[1] * (len(uvsub)+1) ** 2 + p3[2] * (len(uvsub)+1) + p3[3]
-                        elif best[0] == 'p4':
-                            predicted_tomorrow = p4[0] * (len(uvsub)+1) ** 4 + p4[1] * (len(uvsub)+1) ** 3 + p4[2] * (len(uvsub)+1) ** 2 +  p4[3] * (len(uvsub)+1) + p4[4]
-                        else:
-                            predicted_tomorrow = p5[0] * (len(uvsub)+1) ** 5 + p5[1] * (len(uvsub)+1) ** 4 + p5[2] * (len(uvsub)+1) ** 3 + p5[3] * (len(uvsub)+1) ** 2 + p5[4] * (len(uvsub)+1) + p5[5]
-                        '''
-                    else:
-                        pass
-                else:
-                    dates = []
-                    views = []
-                    likes = []
-                    dislikes = []
-                    for i in uvsub:
-                        dates.append(i.date1)
-                        views.append(i.view)
-                        likes.append(i.likes)
-                        dislikes.append(i.dislikes)
-                    return render(request, 'users/less_than_7_days.html', {'User_Detail': User_Detail,
-                                                                           'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
-                                                                               8 - len(uvsub)) + ' days',
-                                                                           'uvmain': uvmain, 'uvsub': uvsub,
-                                                                           'user_view_table': zip(dates, views, likes,
-                                                                                                  dislikes)})
+                dates = []
+                views = []
+                likes = []
+                dislikes = []
+                for i in uvsub:
+                    dates.append(i.date1)
+                    views.append(i.view)
+                    likes.append(i.likes)
+                    dislikes.append(i.dislikes)
+                return render(request, 'users/less_than_7_days.html', {'User_Detail': User_Detail,
+                                                                       'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
+                                                                           8 - len(uvsub)) + ' days',
+                                                                       'uvmain': uvmain, 'uvsub': uvsub,
+                                                                       'user_view_table': zip(dates, views, likes,
+                                                                                              dislikes)})
 
         else:
             final_url = url[url.rfind('/') + 1:]
-            flag,obj,obj1 = us1.get_channel_details([final_url], name, type, url, request)
+            flag, obj, obj1 = us1.get_channel_details([final_url], name, type, url, request)
             ucmain = user_channel_main.objects.get(pk=obj)
             ucsub = user_channel_sub.objects.filter(pk=obj1)
             user1 = users.objects.get(pk=request.session['User_Id'])
@@ -354,14 +158,13 @@ def get_data(request):
                 dates.append(i.date1)
                 views.append(i.view_count)
                 subscribers.append(i.subscriber_count)
-
-
             if flag:
                 return render(request, 'users/less_than_7_days_channel.html', {'User_Detail': User_Detail,
-                                                                   'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
-                                                                       8 - len(ucsub)) + ' days',
-                                                                   'ucmain': ucmain, 'ucsub': ucsub,
-                                                                   'user_view_table': zip(dates, views, subscribers,)})
+                                                                               'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
+                                                                                   8 - len(ucsub)) + ' days',
+                                                                               'ucmain': ucmain, 'ucsub': ucsub,
+                                                                               'user_view_table': zip(dates, views,
+                                                                                                      subscribers, )})
 
             else:
                 return HttpResponseRedirect(reverse(DashBoard))
@@ -376,160 +179,372 @@ def total_view_video_analysis(request, video_id):
         uvmain = video_main.objects.get(user_id=user1.pk, id=video_id)
         uvsub = video_sub.objects.filter(video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
         if len(uvsub) > 7:
-            print('inside123')
+            # print('inside123')
             channel_main_data = video_main.objects.get(user_id=user1.pk, id=uvmain.id)
             channel_sub_data = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
             channel_sub_data1 = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
-            if (len(uvsub) > 20):
-                channel_sub_data1 = channel_sub_data1[5:]
-            else:
-                channel_sub_data1=channel_sub_data1
-            print(len(channel_sub_data1))
-            old_dates = []
-            old_views = []
-            increse_in_old_views = [0]
-            count_1 = 0
-            for k in channel_sub_data1:
-                if count_1 == 0:
-                    old_views.append(k.view)
-                    old_dates.append(k.date1)
-                else:
-                    increse_in_old_views.append(k.view - old_views[count_1 - 1])
-                    old_views.append(k.view)
-                    old_dates.append(k.date1)
-                count_1 = count_1 + 1
-            #print(increse_in_old_views)
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
+            if (len(uvsub) > 25):
+                c1 = channel_sub_data1
+                channel_sub_data1 = channel_sub_data1[10:]
+                # print(len(channel_sub_data1))
+                old_dates = []
+                old_views = []
+                increse_in_old_views = [0]
+                count_1 = 0
+                for k in channel_sub_data1:
+                    if count_1 == 0:
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    else:
+                        increse_in_old_views.append(k.view - old_views[count_1 - 1])
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    count_1 = count_1 + 1
+                    ##print(increse_in_old_views)
 
-                # prediction for all available old views
-            V1 = old_views[:len(old_views) - 1]
-            X1 = []
-            for i in range(len(V1)):
-                X1.append(i)
-            actual = old_views[-1]
-            p1=polyfit(X1, V1, 1)
-            p2=polyfit(X1, V1, 2)
-            p3 = polyfit(X1, V1, 3)
-            p4 = polyfit(X1, V1, 4)
-            p5 = polyfit(X1, V1, 5)
+                    # prediction for all available old views
+                V1 = old_views[:len(old_views) - 1]
+                X1 = []
+                for i in range(len(V1)):
+                    X1.append(i)
+                actual = old_views[-1]
+                p1 = polyfit(X1, V1, 1)
+                p2 = polyfit(X1, V1, 2)
+                p3 = polyfit(X1, V1, 3)
 
-            predicted_p1 = p1[0] * len(uvsub) + p1[1]
-            predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
-            predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
-            predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
-                                                                                                                 3] * len(
-                    uvsub) + p4[4]
-            predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
-                                                                                                                 3] * len(
-                    uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
+                predicted_p1 = p1[0] * len(uvsub) + p1[1]
+                predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
+                predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
 
-            accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
-            accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
-            accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
-            accuracy_p4 = 100 - abs((predicted_p4 - actual) / actual) * 100
-            accuracy_p5 = 100 - abs((predicted_p5 - actual) / actual) * 100
-            #print(accuracy_p1,accuracy_p2,accuracy_p3,accuracy_p4,accuracy_p5)
-            best = []
-            predicted_old_views = []
-            if accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5 :
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p1[0] * i + p1[1])
-                best.append("p1")
-            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5 :
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-                best.append("p2")
-            elif accuracy_p3 > accuracy_p1 and accuracy_p3 > accuracy_p2 and accuracy_p3 > accuracy_p4 and accuracy_p3 > accuracy_p5:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
-                best.append("p3")
-            elif accuracy_p4 > accuracy_p1 and accuracy_p4 > accuracy_p2 and accuracy_p4 > accuracy_p3 and accuracy_p4 > accuracy_p5:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
-                best.append("p4")
-            else:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-                best.append("p5")
+                accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
+                accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
+                accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
+                accuracies = {'p1': accuracy_p1, 'p2': accuracy_p2, 'p3': accuracy_p3}
+                ##print(accuracy_p1,accuracy_p2,accuracy_p3,accuracy_p4,accuracy_p5)
+                best = []
+                predicted_old_views = []
+                if accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p1[0] * i + p1[1])
+                    best.append("p1")
+                elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                    best.append("p2")
+                elif accuracy_p3 > accuracy_p1 and accuracy_p3 > accuracy_p2:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                    best.append("p3")
+
                 # old views,old_views_increment,prediction_old,accuracy
-            accuracy_in_old_views = []
-            for i in range(len(old_views)):
-                accuracy_in_old_views.append(
+                accuracy_in_old_views = []
+                for i in range(len(old_views)):
+                    accuracy_in_old_views.append(
                         100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
 
-                # prediction for next 30 days
-            predicted_for_next_30 = []
+                    # prediction for next 30 days
+                predicted_for_next_30 = []
 
-            for i in range(len(old_views) + 6, len(old_views) + 36, 1):
-                if best[0] == "p1":
-                    predicted_for_next_30.append(p1[0] * i + p1[1])
-                elif best[0] == "p2":
-                    predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-                elif best[0] == "p3":
-                    predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
-                elif best[0] == "p4":
-                    predicted_for_next_30.append(
-                            p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
-                else:
-                    predicted_for_next_30.append(
-                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-            print('\n',p2,'\n\n')
-            print(predicted_for_next_30)
-            predicted_dates = []
-            for i in range(31):
-                if i == 0:
-                    d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
-                    y = d + timedelta(days=1)
-                    predicted_dates.append(y.strftime("%Y-%m-%d"))
-                else:
-                    d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
-                    y = d + timedelta(days=1)
-                    predicted_dates.append(y.strftime("%Y-%m-%d"))
+                for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                    if best[0] == "p1":
+                        predicted_for_next_30.append(p1[0] * i + p1[1])
+                    elif best[0] == "p2":
+                        predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                    elif best[0] == "p3":
+                        predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
 
-            increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
-            print(increase_in_predicted_views)
-                # print(len(predicted_dates),len(predicted_for_next_30))
+                # print('\n',p2,'\n\n')
+                # print(predicted_for_next_30)
+                predicted_dates = []
+                for i in range(31):
+                    if i == 0:
+                        d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
+                        y = d + timedelta(days=1)
+                        predicted_dates.append(y.strftime("%Y-%m-%d"))
+                    else:
+                        d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
+                        y = d + timedelta(days=1)
+                        predicted_dates.append(y.strftime("%Y-%m-%d"))
+
+                increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                if increase_in_predicted_views < 0:
+                    predicted_for_next_30[:] = []
+                    if best[0] == 'p1':
+                        best[0] = 'p2'
+                        for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                            predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                        increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                        if increase_in_predicted_views < 0:
+                            best[0] = 'p3'
+                            predicted_for_next_30[:] = []
+                            for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                                predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                            increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                    elif best[0] == 'p2':
+                        best[0] = 'p1'
+                        for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                            predicted_for_next_30.append(p1[0] * i + p1[1])
+                        increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                        if increase_in_predicted_views < 0:
+                            best[0] = 'p3'
+                            predicted_for_next_30[:] = []
+                            for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                                predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                            increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+
+                    elif best[0] == 'p3':
+                        best[0] = 'p2'
+                        for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                            predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                        increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                        if increase_in_predicted_views < 0:
+                            best[0] = 'p1'
+                            predicted_for_next_30[:] = []
+                            for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                                predicted_for_next_30.append(p1[0] * i + p1[1])
+                            increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+
+                            # elif best[0] == "p3":
+                            #    predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+
+                # print(increase_in_predicted_views)
+                # #print(len(predicted_dates),len(predicted_for_next_30))
                 # for i,j in zip(views,predicted_old_views):
-                #    print(i,j)
+                #    #print(i,j)
+                # print(best)
+                old_views[:] = []
+                old_dates[:] = []
+                increse_in_old_views[:] = []
+                increse_in_old_views = [0]
 
-            old_views1 = old_views
-            increse_in_old_views1 = increse_in_old_views
-            predicted_old_views1 = predicted_old_views
-            old_dates1 = old_dates
-            accuracy_in_old_views1 = accuracy_in_old_views
-            print(accuracy_in_old_views1)
-            old_views1 = old_views1[::-1]
-            increse_in_old_views1 = increse_in_old_views1[::-1]
-            predicted_old_views1 = predicted_old_views1[::-1]
-            old_dates1 = old_dates1[::-1]
-            accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-            avg_accuracy = average(accuracy_in_old_views)
-            avg_accuracy = '%.5f' % (avg_accuracy)
+                count_1 = 0
+                for k in c1:
+                    if count_1 == 0:
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    else:
+                        increse_in_old_views.append(k.view - old_views[count_1 - 1])
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    count_1 = count_1 + 1
+                predicted_old_views[:] = []
+                if best[0] == 'p1':
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p1[0] * i + p1[1])
+                elif best[0] == 'p2':
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                elif best[0] == 'p3':
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                old_views1 = old_views
+                increse_in_old_views1 = increse_in_old_views
+                predicted_old_views1 = predicted_old_views
+                old_dates1 = old_dates
+                accuracy_in_old_views1 = accuracy_in_old_views
+                # print(accuracy_in_old_views1)
+                old_views1 = old_views1[::-1]
+                increse_in_old_views1 = increse_in_old_views1[::-1]
+                predicted_old_views1 = predicted_old_views1[::-1]
+                old_dates1 = old_dates1[::-1]
+                accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
+                if best[0] == 'p1':
+                    avg_accuracy = accuracies['p1']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                elif best[0] == 'p2':
+                    avg_accuracy = accuracies['p2']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                else:
+                    avg_accuracy = accuracies['p3']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
 
-            user1 = users.objects.get(pk=request.session['User_Id'])
-            User_Detail = user1
-            return render(request, 'users/user_views_analysis.html',
-                                  {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
-                                   'old_views': old_views,
-                                   'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                   'count_1': count_1,
-                                   'predicted_for_next_30': predicted_for_next_30,
-                                   'predicted_dates': predicted_dates,
-                                   'increse_in_old_views': increse_in_old_views,
-                                   'increase_in_predicted_views': increase_in_predicted_views,
-                                   'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                          predicted_old_views1,
-                                                          accuracy_in_old_views1),
-                                   'avg_accuracy': avg_accuracy,
-                                   'Channel_Sub_Data': channel_sub_data,
-                                   'type': 'Total',
-                                   'label1': 'Increments in Views',
-                                   'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                   'label3': 'Accuracy On Previous Data Available',
-                                   'label4': 'Total Views for of Previous Data Available',
-                                   'label5': 'Predicted Views for Next 7 Days',
-                                   'label6': 'History of Previous Predictions'})
+                user1 = users.objects.get(pk=request.session['User_Id'])
+                User_Detail = user1
+                return render(request, 'users/user_views_analysis.html',
+                              {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
+                               'old_views': old_views,
+                               'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
+                               'count_1': count_1,
+                               'predicted_for_next_30': predicted_for_next_30,
+                               'predicted_dates': predicted_dates,
+                               'increse_in_old_views': increse_in_old_views,
+                               'increase_in_predicted_views': increase_in_predicted_views,
+                               'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
+                                                      predicted_old_views1,
+                                                      accuracy_in_old_views1),
+                               'avg_accuracy': avg_accuracy,
+                               'Channel_Sub_Data': channel_sub_data,
+                               'type': 'Total',
+                               'label1': 'Increments in Views',
+                               'label2': 'Prediction of Daily Views Increase For Next 7 Days',
+                               'label3': 'Accuracy On Previous Data Available',
+                               'label4': 'Total Views for of Previous Data Available',
+                               'label5': 'Predicted Views for Next 30 Days',
+                               'label6': 'History of Previous Predictions'})
+            else:
+                c1 = channel_sub_data1
+                channel_sub_data1 = channel_sub_data1[10:]
+                # print(len(channel_sub_data1))
+                old_dates = []
+                old_views = []
+                increse_in_old_views = [0]
+                count_1 = 0
+                for k in channel_sub_data1:
+                    if count_1 == 0:
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    else:
+                        increse_in_old_views.append(k.view - old_views[count_1 - 1])
+                        old_views.append(k.view)
+                        old_dates.append(k.date1)
+                    count_1 = count_1 + 1
+                    ##print(increse_in_old_views)
+
+                    # prediction for all available old views
+                V1 = old_views[:len(old_views) - 1]
+                X1 = []
+                for i in range(len(V1)):
+                    X1.append(i)
+                actual = old_views[-1]
+                p1 = polyfit(X1, V1, 1)
+                p2 = polyfit(X1, V1, 2)
+                p3 = polyfit(X1, V1, 3)
+                p4 = polyfit(X1, V1, 4)
+                p5 = polyfit(X1, V1, 5)
+                predicted_p1 = p1[0] * len(uvsub) + p1[1]
+                predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
+                predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
+                predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
+                                                                                                                 3] * len(
+                    uvsub) + p4[4]
+                predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
+                                                                                                                 3] * len(
+                    uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
+                accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
+                accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
+                accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
+                accuracy_p4 = 100 - abs((predicted_p4 - actual) / actual) * 100
+                accuracy_p5 = 100 - abs((predicted_p5 - actual) / actual) * 100
+                accuracies = {'p1': accuracy_p1, 'p2': accuracy_p2, 'p3': accuracy_p3, 'p4': accuracy_p4,
+                              'p5': accuracy_p5}
+                ##print(accuracy_p1,accuracy_p2,accuracy_p3,accuracy_p4,accuracy_p5)
+                best = []
+                predicted_old_views = []
+                if accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p1[0] * i + p1[1])
+                    best.append("p1")
+                elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                    best.append("p2")
+                elif accuracy_p3 > accuracy_p1 and accuracy_p3 > accuracy_p2 and accuracy_p3 > accuracy_p4 and accuracy_p3 > accuracy_p5:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                    best.append("p3")
+                elif accuracy_p4 > accuracy_p1 and accuracy_p4 > accuracy_p2 and accuracy_p4 > accuracy_p3 and accuracy_p4 > accuracy_p5:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
+                    best.append("p4")
+                else:
+                    for i in range(len(old_views)):
+                        predicted_old_views.append(
+                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+                    best.append("p5")
+
+                    # old views,old_views_increment,prediction_old,accuracy
+                accuracy_in_old_views = []
+                for i in range(len(old_views)):
+                    accuracy_in_old_views.append(
+                        100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
+
+                    # prediction for next 30 days
+                predicted_for_next_30 = []
+                for i in range(len(old_views) + 1, len(old_views) + 31, 1):
+                    if best[0] == "p1":
+                        predicted_for_next_30.append(p1[0] * i + p1[1])
+                    elif best[0] == "p2":
+                        predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                    elif best[0] == "p3":
+                        predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                    elif best[0] == "p4":
+                        predicted_for_next_30.append(
+                            p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
+                    else:
+                        predicted_for_next_30.append(
+                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+                # print('\n',p2,'\n\n')
+                # print(predicted_for_next_30)
+                predicted_dates = []
+                for i in range(15):
+                    if i == 0:
+                        d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
+                        y = d + timedelta(days=1)
+                        predicted_dates.append(y.strftime("%Y-%m-%d"))
+                    else:
+                        d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
+                        y = d + timedelta(days=1)
+                        predicted_dates.append(y.strftime("%Y-%m-%d"))
+
+                increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+
+                # print(increase_in_predicted_views)
+                # #print(len(predicted_dates),len(predicted_for_next_30))
+                # for i,j in zip(views,predicted_old_views):
+                #    #print(i,j)
+                # print(best)
+                old_views1 = old_views
+                increse_in_old_views1 = increse_in_old_views
+                predicted_old_views1 = predicted_old_views
+                old_dates1 = old_dates
+                accuracy_in_old_views1 = accuracy_in_old_views
+                # print(accuracy_in_old_views1)
+                old_views1 = old_views1[::-1]
+                increse_in_old_views1 = increse_in_old_views1[::-1]
+                predicted_old_views1 = predicted_old_views1[::-1]
+                old_dates1 = old_dates1[::-1]
+                accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
+                if best[0] == 'p1':
+                    avg_accuracy = accuracies['p1']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                elif best[0] == 'p2':
+                    avg_accuracy = accuracies['p2']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                elif best[0] == 'p3':
+                    avg_accuracy = accuracies['p3']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                elif best[0] == 'p4':
+                    avg_accuracy = accuracies['p4']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                else:
+                    avg_accuracy = accuracies['p5']
+                    avg_accuracy = '%.5f' % (avg_accuracy)
+                user1 = users.objects.get(pk=request.session['User_Id'])
+                User_Detail = user1
+                return render(request, 'users/user_views_analysis.html',
+                              {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
+                               'old_views': old_views,
+                               'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
+                               'count_1': count_1,
+                               'predicted_for_next_30': predicted_for_next_30,
+                               'predicted_dates': predicted_dates,
+                               'increse_in_old_views': increse_in_old_views,
+                               'increase_in_predicted_views': increase_in_predicted_views,
+                               'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
+                                                      predicted_old_views1,
+                                                      accuracy_in_old_views1),
+                               'avg_accuracy': avg_accuracy,
+                               'Channel_Sub_Data': channel_sub_data,
+                               'type': 'Total',
+                               'label1': 'Increments in Views',
+                               'label2': 'Prediction of Daily Views Increase For Next 7 Days',
+                               'label3': 'Accuracy On Previous Data Available',
+                               'label4': 'Total Views for of Previous Data Available',
+                               'label5': 'Predicted Views for Next 15 Days',
+                               'label6': 'History of Previous Predictions'})
+
         else:
             dates = []
             views = []
@@ -549,6 +564,7 @@ def total_view_video_analysis(request, video_id):
     else:
         return HttpResponseRedirect('/Home/')
 
+
 def weekly_view_video_analysis(request, video_id):
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
@@ -556,13 +572,13 @@ def weekly_view_video_analysis(request, video_id):
         uvmain = video_main.objects.get(user_id=user1.pk, id=video_id)
         uvsub = video_sub.objects.filter(video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
         if len(uvsub) > 7:
-            print('inside123')
+            # print('inside123')
             channel_main_data = video_main.objects.get(user_id=user1.pk, id=uvmain.id)
             channel_sub_data = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
             channel_sub_data1 = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
-            channel_sub_data1=channel_sub_data1[len(channel_sub_data1) - 7 :]
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
+            channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 7:]
             old_dates = []
             old_views = []
             increse_in_old_views = [0]
@@ -576,17 +592,17 @@ def weekly_view_video_analysis(request, video_id):
                     old_views.append(k.view)
                     old_dates.append(k.date1)
                 count_1 = count_1 + 1
-            print(increse_in_old_views)
+                # print(increse_in_old_views)
 
                 # prediction for all available old views
             V1 = old_views[:len(old_views) - 1]
             X1 = []
             for i in range(len(V1)):
                 X1.append(i)
-            print(V1)
+            # print(V1)
             actual = old_views[-1]
-            p1=polyfit(X1, V1, 1)
-            p2=polyfit(X1, V1, 2)
+            p1 = polyfit(X1, V1, 1)
+            p2 = polyfit(X1, V1, 2)
             p3 = polyfit(X1, V1, 3)
             p4 = polyfit(X1, V1, 4)
             p5 = polyfit(X1, V1, 5)
@@ -595,11 +611,11 @@ def weekly_view_video_analysis(request, video_id):
             predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
             predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
             predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
-                                                                                                                 3] * len(
-                    uvsub) + p4[4]
+                                                                                                             3] * len(
+                uvsub) + p4[4]
             predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
-                                                                                                                 3] * len(
-                    uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
+                                                                                                             3] * len(
+                uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
 
             accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
             accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
@@ -613,11 +629,11 @@ def weekly_view_video_analysis(request, video_id):
                 for i in range(len(old_views)):
                     predicted_old_views.append(p1[0] * i + p1[1])
                 best.append("p2")
-            elif accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5 :
+            elif accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5:
                 for i in range(len(old_views)):
                     predicted_old_views.append(p1[0] * i + p1[1])
                 best.append("p1")
-            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5 :
+            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5:
                 for i in range(len(old_views)):
                     predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
                 best.append("p2")
@@ -631,14 +647,15 @@ def weekly_view_video_analysis(request, video_id):
                 best.append("p4")
             else:
                 for i in range(len(old_views)):
-                    predicted_old_views.append(p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+                    predicted_old_views.append(
+                        p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
                 best.append("p5")
 
                 # old views,old_views_increment,prediction_old,accuracy
             accuracy_in_old_views = []
             for i in range(len(old_views)):
                 accuracy_in_old_views.append(
-                        100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
+                    100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
 
                 # prediction for next 30 days
             predicted_for_next_30 = []
@@ -651,12 +668,12 @@ def weekly_view_video_analysis(request, video_id):
                     predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
                 elif best[0] == "p4":
                     predicted_for_next_30.append(
-                            p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
+                        p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
                 else:
                     predicted_for_next_30.append(
-                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-            print(best[0])
-            print(predicted_for_next_30)
+                        p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+            # print(best[0])
+            # print(predicted_for_next_30)
             predicted_dates = []
             for i in range(7):
                 if i == 0:
@@ -669,48 +686,48 @@ def weekly_view_video_analysis(request, video_id):
                     predicted_dates.append(y.strftime("%Y-%m-%d"))
 
             increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
-            print(increase_in_predicted_views)
-                # print(len(predicted_dates),len(predicted_for_next_30))
-                # for i,j in zip(views,predicted_old_views):
-                #    print(i,j)
+            # print(increase_in_predicted_views)
+            # #print(len(predicted_dates),len(predicted_for_next_30))
+            # for i,j in zip(views,predicted_old_views):
+            #    #print(i,j)
 
             old_views1 = old_views
             increse_in_old_views1 = increse_in_old_views
             predicted_old_views1 = predicted_old_views
             old_dates1 = old_dates
             accuracy_in_old_views1 = accuracy_in_old_views
-            print(accuracy_in_old_views1)
+            # print(accuracy_in_old_views1)
             old_views1 = old_views1[::-1]
             increse_in_old_views1 = increse_in_old_views1[::-1]
             predicted_old_views1 = predicted_old_views1[::-1]
             old_dates1 = old_dates1[::-1]
             accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
             avg_accuracy = average(accuracy_in_old_views)
-            avg_accuracy='%.5f' % (avg_accuracy)
+            avg_accuracy = '%.5f' % (avg_accuracy)
 
             user1 = users.objects.get(pk=request.session['User_Id'])
             User_Detail = user1
             return render(request, 'users/user_views_analysis.html',
-                                  {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
-                                   'old_views': old_views,
-                                   'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                   'count_1': count_1,
-                                   'predicted_for_next_30': predicted_for_next_30,
-                                   'predicted_dates': predicted_dates,
-                                   'increse_in_old_views': increse_in_old_views,
-                                   'increase_in_predicted_views': increase_in_predicted_views,
-                                   'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                          predicted_old_views1,
-                                                          accuracy_in_old_views1),
-                                   'avg_accuracy': avg_accuracy,
-                                   'Channel_Sub_Data': channel_sub_data,
-                                   'type': 'Total',
-                                   'label1': 'Increments in Views',
-                                   'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                   'label3': 'Accuracy On Previous Data Available',
-                                   'label4': 'Total Views for of Previous Data Available',
-                                   'label5': 'Predicted Views for Next 7 Days',
-                                   'label6': 'History of Previous Predictions'})
+                          {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
+                           'old_views': old_views,
+                           'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
+                           'count_1': count_1,
+                           'predicted_for_next_30': predicted_for_next_30,
+                           'predicted_dates': predicted_dates,
+                           'increse_in_old_views': increse_in_old_views,
+                           'increase_in_predicted_views': increase_in_predicted_views,
+                           'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
+                                                  predicted_old_views1,
+                                                  accuracy_in_old_views1),
+                           'avg_accuracy': avg_accuracy,
+                           'Channel_Sub_Data': channel_sub_data,
+                           'type': 'Total',
+                           'label1': 'Increments in Views',
+                           'label2': 'Prediction of Daily Views Increase For Next 7 Days',
+                           'label3': 'Accuracy On Previous Data Available',
+                           'label4': 'Total Views for of Previous Data Available',
+                           'label5': 'Predicted Views for Next 7 Days',
+                           'label6': 'History of Previous Predictions'})
         else:
             dates = []
             views = []
@@ -730,6 +747,7 @@ def weekly_view_video_analysis(request, video_id):
     else:
         return HttpResponseRedirect('/Home/')
 
+
 def bimoonthly_view_video_analysis(request, video_id):
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])
@@ -737,14 +755,14 @@ def bimoonthly_view_video_analysis(request, video_id):
         uvmain = video_main.objects.get(user_id=user1.pk, id=video_id)
         uvsub = video_sub.objects.filter(video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
         if len(uvsub) > 7:
-            print('inside123')
+            # print('inside123')
             channel_main_data = video_main.objects.get(user_id=user1.pk, id=uvmain.id)
             channel_sub_data = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
             channel_sub_data1 = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
-            channel_sub_data1=channel_sub_data1[len(channel_sub_data1) - 15 :]
-            print(len(channel_sub_data1))
+                video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
+            channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 15:]
+            # print(len(channel_sub_data1))
             old_dates = []
             old_views = []
             increse_in_old_views = [0]
@@ -758,17 +776,17 @@ def bimoonthly_view_video_analysis(request, video_id):
                     old_views.append(k.view)
                     old_dates.append(k.date1)
                 count_1 = count_1 + 1
-            print(increse_in_old_views)
+                # print(increse_in_old_views)
 
                 # prediction for all available old views
             V1 = old_views[:len(old_views) - 1]
             X1 = []
             for i in range(len(V1)):
                 X1.append(i)
-            print(V1)
+            # print(V1)
             actual = old_views[-1]
-            p1=polyfit(X1, V1, 1)
-            p2=polyfit(X1, V1, 2)
+            p1 = polyfit(X1, V1, 1)
+            p2 = polyfit(X1, V1, 2)
             p3 = polyfit(X1, V1, 3)
             p4 = polyfit(X1, V1, 4)
             p5 = polyfit(X1, V1, 5)
@@ -777,11 +795,11 @@ def bimoonthly_view_video_analysis(request, video_id):
             predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
             predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
             predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
-                                                                                                                 3] * len(
-                    uvsub) + p4[4]
+                                                                                                             3] * len(
+                uvsub) + p4[4]
             predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
-                                                                                                                 3] * len(
-                    uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
+                                                                                                             3] * len(
+                uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
 
             accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
             accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
@@ -795,11 +813,11 @@ def bimoonthly_view_video_analysis(request, video_id):
                 for i in range(len(old_views)):
                     predicted_old_views.append(p1[0] * i + p1[1])
                 best.append("p2")
-            elif accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5 :
+            elif accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5:
                 for i in range(len(old_views)):
                     predicted_old_views.append(p1[0] * i + p1[1])
                 best.append("p1")
-            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5 :
+            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5:
                 for i in range(len(old_views)):
                     predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
                 best.append("p2")
@@ -813,14 +831,15 @@ def bimoonthly_view_video_analysis(request, video_id):
                 best.append("p4")
             else:
                 for i in range(len(old_views)):
-                    predicted_old_views.append(p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+                    predicted_old_views.append(
+                        p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
                 best.append("p5")
 
                 # old views,old_views_increment,prediction_old,accuracy
             accuracy_in_old_views = []
             for i in range(len(old_views)):
                 accuracy_in_old_views.append(
-                        100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
+                    100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
 
                 # prediction for next 30 days
             predicted_for_next_30 = []
@@ -833,12 +852,12 @@ def bimoonthly_view_video_analysis(request, video_id):
                     predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
                 elif best[0] == "p4":
                     predicted_for_next_30.append(
-                            p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
+                        p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
                 else:
                     predicted_for_next_30.append(
-                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-            print(best[0])
-            print(predicted_for_next_30)
+                        p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
+            # print(best[0])
+            # print(predicted_for_next_30)
             predicted_dates = []
             for i in range(15):
                 if i == 0:
@@ -851,48 +870,48 @@ def bimoonthly_view_video_analysis(request, video_id):
                     predicted_dates.append(y.strftime("%Y-%m-%d"))
 
             increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
-            print(increase_in_predicted_views)
-                # print(len(predicted_dates),len(predicted_for_next_30))
-                # for i,j in zip(views,predicted_old_views):
-                #    print(i,j)
+            # print(increase_in_predicted_views)
+            # #print(len(predicted_dates),len(predicted_for_next_30))
+            # for i,j in zip(views,predicted_old_views):
+            #    #print(i,j)
 
             old_views1 = old_views
             increse_in_old_views1 = increse_in_old_views
             predicted_old_views1 = predicted_old_views
             old_dates1 = old_dates
             accuracy_in_old_views1 = accuracy_in_old_views
-            print(accuracy_in_old_views1)
+            # print(accuracy_in_old_views1)
             old_views1 = old_views1[::-1]
             increse_in_old_views1 = increse_in_old_views1[::-1]
             predicted_old_views1 = predicted_old_views1[::-1]
             old_dates1 = old_dates1[::-1]
             accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
             avg_accuracy = average(accuracy_in_old_views)
-            avg_accuracy='%.5f' % (avg_accuracy)
+            avg_accuracy = '%.5f' % (avg_accuracy)
 
             user1 = users.objects.get(pk=request.session['User_Id'])
             User_Detail = user1
             return render(request, 'users/user_views_analysis.html',
-                                  {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
-                                   'old_views': old_views,
-                                   'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                   'count_1': count_1,
-                                   'predicted_for_next_30': predicted_for_next_30,
-                                   'predicted_dates': predicted_dates,
-                                   'increse_in_old_views': increse_in_old_views,
-                                   'increase_in_predicted_views': increase_in_predicted_views,
-                                   'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                          predicted_old_views1,
-                                                          accuracy_in_old_views1),
-                                   'avg_accuracy': avg_accuracy,
-                                   'Channel_Sub_Data': channel_sub_data,
-                                   'type': 'Total',
-                                   'label1': 'Increments in Views',
-                                   'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                   'label3': 'Accuracy On Previous Data Available',
-                                   'label4': 'Total Views for of Previous Data Available',
-                                   'label5': 'Predicted Views for Next 7 Days',
-                                   'label6': 'History of Previous Predictions'})
+                          {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
+                           'old_views': old_views,
+                           'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
+                           'count_1': count_1,
+                           'predicted_for_next_30': predicted_for_next_30,
+                           'predicted_dates': predicted_dates,
+                           'increse_in_old_views': increse_in_old_views,
+                           'increase_in_predicted_views': increase_in_predicted_views,
+                           'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
+                                                  predicted_old_views1,
+                                                  accuracy_in_old_views1),
+                           'avg_accuracy': avg_accuracy,
+                           'Channel_Sub_Data': channel_sub_data,
+                           'type': 'Total',
+                           'label1': 'Increments in Views',
+                           'label2': 'Prediction of Daily Views Increase For Next 7 Days',
+                           'label3': 'Accuracy On Previous Data Available',
+                           'label4': 'Total Views for of Previous Data Available',
+                           'label5': 'Predicted Views for Next 7 Days',
+                           'label6': 'History of Previous Predictions'})
         else:
             dates = []
             views = []
@@ -911,6 +930,7 @@ def bimoonthly_view_video_analysis(request, video_id):
                                                                                           dislikes)})
     else:
         return HttpResponseRedirect('/Home/')
+
 
 def monthly_view_video_analysis(request, video_id):
     if 'User_Id' in request.session:
@@ -918,182 +938,212 @@ def monthly_view_video_analysis(request, video_id):
         User_Detail = user1
         uvmain = video_main.objects.get(user_id=user1.pk, id=video_id)
         uvsub = video_sub.objects.filter(video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
-        if len(uvsub) > 7:
-            print('inside123')
-            channel_main_data = video_main.objects.get(user_id=user1.pk, id=uvmain.id)
-            channel_sub_data = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
-            channel_sub_data1 = video_sub.objects.filter(
-                    video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
-            channel_sub_data1=channel_sub_data1[len(channel_sub_data1) - 15 :]
-            print(len(channel_sub_data1))
-            old_dates = []
-            old_views = []
-            increse_in_old_views = [0]
-            count_1 = 0
-            for k in channel_sub_data1:
-                if count_1 == 0:
-                    old_views.append(k.view)
-                    old_dates.append(k.date1)
-                else:
-                    increse_in_old_views.append(k.view - old_views[count_1 - 1])
-                    old_views.append(k.view)
-                    old_dates.append(k.date1)
-                count_1 = count_1 + 1
-            print(increse_in_old_views)
-
-                # prediction for all available old views
-            V1 = old_views[:len(old_views) - 1]
-            X1 = []
-            for i in range(len(V1)):
-                X1.append(i)
-            print(V1)
-            actual = old_views[-1]
-            p1=polyfit(X1, V1, 1)
-            p2=polyfit(X1, V1, 2)
-            p3 = polyfit(X1, V1, 3)
-            p4 = polyfit(X1, V1, 4)
-            p5 = polyfit(X1, V1, 5)
-
-            predicted_p1 = p1[0] * len(uvsub) + p1[1]
-            predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
-            predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
-            predicted_p4 = p4[0] * len(uvsub) ** 4 + p4[1] * len(uvsub) ** 3 + p4[2] * len(uvsub) ** 2 + p4[
-                                                                                                                 3] * len(
-                    uvsub) + p4[4]
-            predicted_p5 = p5[0] * len(uvsub) ** 5 + p5[1] * len(uvsub) ** 4 + p5[2] * len(uvsub) ** 3 + p5[
-                                                                                                                 3] * len(
-                    uvsub) ** 2 + p5[4] * len(uvsub) + p5[5]
-
-            accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
-            accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
-            accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
-            accuracy_p4 = 100 - abs((predicted_p4 - actual) / actual) * 100
-            accuracy_p5 = 100 - abs((predicted_p5 - actual) / actual) * 100
-
-            best = []
-            predicted_old_views = []
-            if accuracy_p2 > 99.8:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p1[0] * i + p1[1])
-                best.append("p2")
-            elif accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3 and accuracy_p1 > accuracy_p4 and accuracy_p1 > accuracy_p5 :
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p1[0] * i + p1[1])
-                best.append("p1")
-            elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3 and accuracy_p2 > accuracy_p4 and accuracy_p2 > accuracy_p5 :
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-                best.append("p2")
-            elif accuracy_p3 > accuracy_p1 and accuracy_p3 > accuracy_p2 and accuracy_p3 > accuracy_p4 and accuracy_p3 > accuracy_p5:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
-                best.append("p3")
-            elif accuracy_p4 > accuracy_p1 and accuracy_p4 > accuracy_p2 and accuracy_p4 > accuracy_p3 and accuracy_p4 > accuracy_p5:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
-                best.append("p4")
+        channel_main_data = video_main.objects.get(user_id=user1.pk, id=uvmain.id)
+        channel_sub_data = video_sub.objects.filter(
+            video_main_id=video_main.objects.get(id=uvmain.id)).order_by('-date1')
+        channel_sub_data1 = video_sub.objects.filter(
+            video_main_id=video_main.objects.get(id=uvmain.id)).order_by('date1')
+        c1 = channel_sub_data1
+        channel_sub_data1=channel_sub_data1[len(channel_sub_data1)-30:]
+        channel_sub_data1 = channel_sub_data1[10:]
+        # print(len(channel_sub_data1))
+        old_dates = []
+        old_views = []
+        increse_in_old_views = [0]
+        count_1 = 0
+        for k in channel_sub_data1:
+            if count_1 == 0:
+                old_views.append(k.view)
+                old_dates.append(k.date1)
             else:
-                for i in range(len(old_views)):
-                    predicted_old_views.append(p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-                best.append("p5")
+                increse_in_old_views.append(k.view - old_views[count_1 - 1])
+                old_views.append(k.view)
+                old_dates.append(k.date1)
+            count_1 = count_1 + 1
+            ##print(increse_in_old_views)
 
-                # old views,old_views_increment,prediction_old,accuracy
-            accuracy_in_old_views = []
+            # prediction for all available old views
+        V1 = old_views[:len(old_views) - 1]
+        X1 = []
+        for i in range(len(V1)):
+            X1.append(i)
+        actual = old_views[-1]
+        p1 = polyfit(X1, V1, 1)
+        p2 = polyfit(X1, V1, 2)
+        p3 = polyfit(X1, V1, 3)
+
+        predicted_p1 = p1[0] * len(uvsub) + p1[1]
+        predicted_p2 = p2[0] * len(uvsub) ** 2 + p2[1] * len(uvsub) + p2[2]
+        predicted_p3 = p3[0] * len(uvsub) ** 3 + p3[1] * len(uvsub) ** 2 + p3[2] * len(uvsub) + p3[3]
+
+        accuracy_p1 = 100 - abs((predicted_p1 - actual) / actual) * 100
+        accuracy_p2 = 100 - abs((predicted_p2 - actual) / actual) * 100
+        accuracy_p3 = 100 - abs((predicted_p3 - actual) / actual) * 100
+        accuracies = {'p1': accuracy_p1, 'p2': accuracy_p2, 'p3': accuracy_p3}
+        ##print(accuracy_p1,accuracy_p2,accuracy_p3,accuracy_p4,accuracy_p5)
+        best = []
+        predicted_old_views = []
+        if accuracy_p1 > accuracy_p2 and accuracy_p1 > accuracy_p3:
             for i in range(len(old_views)):
-                accuracy_in_old_views.append(
-                        100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
+                predicted_old_views.append(p1[0] * i + p1[1])
+            best.append("p1")
+        elif accuracy_p2 > accuracy_p1 and accuracy_p2 > accuracy_p3:
+            for i in range(len(old_views)):
+                predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+            best.append("p2")
+        elif accuracy_p3 > accuracy_p1 and accuracy_p3 > accuracy_p2:
+            for i in range(len(old_views)):
+                predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+            best.append("p3")
 
-                # prediction for next 30 days
-            predicted_for_next_30 = []
-            for i in range(len(old_views) + 1, len(old_views) + 31, 1):
-                if best[0] == "p1":
-                    predicted_for_next_30.append(p1[0] * i + p1[1])
-                elif best[0] == "p2":
+        # old views,old_views_increment,prediction_old,accuracy
+        accuracy_in_old_views = []
+        for i in range(len(old_views)):
+            accuracy_in_old_views.append(
+                100 - abs((predicted_old_views[i] - old_views[i]) / old_views[i]))
+
+            # prediction for next 30 days
+        predicted_for_next_30 = []
+
+        for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+            if best[0] == "p1":
+                predicted_for_next_30.append(p1[0] * i + p1[1])
+            elif best[0] == "p2":
+                predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+            elif best[0] == "p3":
+                predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+
+        # print('\n',p2,'\n\n')
+        # print(predicted_for_next_30)
+        predicted_dates = []
+        for i in range(31):
+            if i == 0:
+                d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
+                y = d + timedelta(days=1)
+                predicted_dates.append(y.strftime("%Y-%m-%d"))
+            else:
+                d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
+                y = d + timedelta(days=1)
+                predicted_dates.append(y.strftime("%Y-%m-%d"))
+
+        increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+        if increase_in_predicted_views < 0:
+            predicted_for_next_30[:] = []
+            if best[0] == 'p1':
+                best[0] = 'p2'
+                for i in range(len(old_views) + 11, len(old_views) + 42, 1):
                     predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-                elif best[0] == "p3":
-                    predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
-                elif best[0] == "p4":
-                    predicted_for_next_30.append(
-                            p4[0] * i ** 4 + p4[1] * i ** 3 + p4[2] * i ** 2 + p4[3] * i + p4[4])
-                else:
-                    predicted_for_next_30.append(
-                            p5[0] * i ** 5 + p5[1] * i ** 4 + p5[2] * i ** 3 + p5[3] * i ** 2 + p5[4] * i + p5[5])
-            print(best[0])
-            print(predicted_for_next_30)
-            predicted_dates = []
-            for i in range(30):
-                if i == 0:
-                    d = datetime.strptime(old_dates[-1], "%Y-%m-%d")
-                    y = d + timedelta(days=1)
-                    predicted_dates.append(y.strftime("%Y-%m-%d"))
-                else:
-                    d = datetime.strptime(predicted_dates[-1], "%Y-%m-%d")
-                    y = d + timedelta(days=1)
-                    predicted_dates.append(y.strftime("%Y-%m-%d"))
+                increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                if increase_in_predicted_views < 0:
+                    best[0] = 'p3'
+                    predicted_for_next_30[:] = []
+                    for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                        predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                    increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+            elif best[0] == 'p2':
+                best[0] = 'p1'
+                for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                    predicted_for_next_30.append(p1[0] * i + p1[1])
+                increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                if increase_in_predicted_views < 0:
+                    best[0] = 'p3'
+                    predicted_for_next_30[:] = []
+                    for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                        predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+                    increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
 
-            increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
-            print(increase_in_predicted_views)
-                # print(len(predicted_dates),len(predicted_for_next_30))
-                # for i,j in zip(views,predicted_old_views):
-                #    print(i,j)
+            elif best[0] == 'p3':
+                best[0] = 'p2'
+                for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                    predicted_for_next_30.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+                increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
+                if increase_in_predicted_views < 0:
+                    best[0] = 'p1'
+                    predicted_for_next_30[:] = []
+                    for i in range(len(old_views) + 11, len(old_views) + 42, 1):
+                        predicted_for_next_30.append(p1[0] * i + p1[1])
+                    increase_in_predicted_views = int(predicted_for_next_30[1]) - int(predicted_for_next_30[0])
 
-            old_views1 = old_views
-            increse_in_old_views1 = increse_in_old_views
-            predicted_old_views1 = predicted_old_views
-            old_dates1 = old_dates
-            accuracy_in_old_views1 = accuracy_in_old_views
-            print(accuracy_in_old_views1)
-            old_views1 = old_views1[::-1]
-            increse_in_old_views1 = increse_in_old_views1[::-1]
-            predicted_old_views1 = predicted_old_views1[::-1]
-            old_dates1 = old_dates1[::-1]
-            accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-            avg_accuracy = average(accuracy_in_old_views)
-            avg_accuracy='%.5f' % (avg_accuracy)
+                    # elif best[0] == "p3":
+                    #    predicted_for_next_30.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
 
-            user1 = users.objects.get(pk=request.session['User_Id'])
-            User_Detail = user1
-            return render(request, 'users/user_views_analysis.html',
-                                  {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
-                                   'old_views': old_views,
-                                   'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
-                                   'count_1': count_1,
-                                   'predicted_for_next_30': predicted_for_next_30,
-                                   'predicted_dates': predicted_dates,
-                                   'increse_in_old_views': increse_in_old_views,
-                                   'increase_in_predicted_views': increase_in_predicted_views,
-                                   'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
-                                                          predicted_old_views1,
-                                                          accuracy_in_old_views1),
-                                   'avg_accuracy': avg_accuracy,
-                                   'Channel_Sub_Data': channel_sub_data,
-                                   'type': 'Total',
-                                   'label1': 'Increments in Views',
-                                   'label2': 'Prediction of Daily Views Increase For Next 7 Days',
-                                   'label3': 'Accuracy On Previous Data Available',
-                                   'label4': 'Total Views for of Previous Data Available',
-                                   'label5': 'Predicted Views for Next 7 Days',
-                                   'label6': 'History of Previous Predictions'})
+        # print(increase_in_predicted_views)
+        # #print(len(predicted_dates),len(predicted_for_next_30))
+        # for i,j in zip(views,predicted_old_views):
+        #    #print(i,j)
+        # print(best)
+        old_views[:] = []
+        old_dates[:] = []
+        increse_in_old_views[:] = []
+        increse_in_old_views = [0]
+
+        count_1 = 0
+        for k in c1:
+            if count_1 == 0:
+                old_views.append(k.view)
+                old_dates.append(k.date1)
+            else:
+                increse_in_old_views.append(k.view - old_views[count_1 - 1])
+                old_views.append(k.view)
+                old_dates.append(k.date1)
+            count_1 = count_1 + 1
+        predicted_old_views[:] = []
+        if best[0] == 'p1':
+            for i in range(len(old_views)):
+                predicted_old_views.append(p1[0] * i + p1[1])
+        elif best[0] == 'p2':
+            for i in range(len(old_views)):
+                predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
+        elif best[0] == 'p3':
+            for i in range(len(old_views)):
+                predicted_old_views.append(p3[0] * i ** 3 + p3[1] * i ** 2 + p3[2] * i + p3[3])
+        old_views1 = old_views
+        increse_in_old_views1 = increse_in_old_views
+        predicted_old_views1 = predicted_old_views
+        old_dates1 = old_dates
+        accuracy_in_old_views1 = accuracy_in_old_views
+        # print(accuracy_in_old_views1)
+        old_views1 = old_views1[::-1]
+        increse_in_old_views1 = increse_in_old_views1[::-1]
+        predicted_old_views1 = predicted_old_views1[::-1]
+        old_dates1 = old_dates1[::-1]
+        accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
+        if best[0] == 'p1':
+            avg_accuracy = accuracies['p1']
+            avg_accuracy = '%.5f' % (avg_accuracy)
+        elif best[0] == 'p2':
+            avg_accuracy = accuracies['p2']
+            avg_accuracy = '%.5f' % (avg_accuracy)
         else:
-            dates = []
-            views = []
-            likes = []
-            dislikes = []
-            for i in uvsub:
-                dates.append(i.date1)
-                views.append(i.view)
-                likes.append(i.likes)
-                dislikes.append(i.dislikes)
-            return render(request, 'users/less_than_7_days.html', {'User_Detail': User_Detail,
-                                                                   'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
-                                                                       8 - len(uvsub)) + ' days',
-                                                                   'uvmain': uvmain, 'uvsub': uvsub,
-                                                                   'user_view_table': zip(dates, views, likes,
-                                                                                          dislikes)})
+            avg_accuracy = accuracies['p3']
+            avg_accuracy = '%.5f' % (avg_accuracy)
+
+        user1 = users.objects.get(pk=request.session['User_Id'])
+        User_Detail = user1
+        return render(request, 'users/user_views_analysis.html',
+                      {'User_Detail': User_Detail, 'Channel_Main_Data': channel_main_data,
+                       'old_views': old_views,
+                       'predicted_old_views': predicted_old_views, 'old_dates': old_dates,
+                       'count_1': count_1,
+                       'predicted_for_next_30': predicted_for_next_30,
+                       'predicted_dates': predicted_dates,
+                       'increse_in_old_views': increse_in_old_views,
+                       'increase_in_predicted_views': increase_in_predicted_views,
+                       'table_old_views': zip(old_dates1, old_views1, increse_in_old_views1,
+                                              predicted_old_views1,
+                                              accuracy_in_old_views1),
+                       'avg_accuracy': avg_accuracy,
+                       'Channel_Sub_Data': channel_sub_data,
+                       'type': 'Total',
+                       'label1': 'Increments in Views',
+                       'label2': 'Prediction of Daily Views Increase For Next 7 Days',
+                       'label3': 'Accuracy On Previous Data Available',
+                       'label4': 'Total Views for of Previous Data Available',
+                       'label5': 'Predicted Views for Next 30 Days',
+                       'label6': 'History of Previous Predictions'})
+
     else:
         return HttpResponseRedirect('/Home/')
-
 
 def view_channel_dashboard(request, channel_id):
     channel_main_data = user_channel_main.objects.get(pk=channel_id)
@@ -1114,7 +1164,7 @@ def view_channel_dashboard(request, channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    # print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -1162,23 +1212,23 @@ def view_channel_dashboard(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    # print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
     avg_accuracy = average(accuracy_in_old_views)
-    print('%.5f' % (avg_accuracy))
+    # print('%.5f' % (avg_accuracy))
 
     if 'User_Id' in request.session:
         user1 = users.objects.get(pk=request.session['User_Id'])

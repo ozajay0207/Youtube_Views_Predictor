@@ -11,7 +11,7 @@ class users(models.Model):
 
 class video_main(models.Model):
     video_name = models.CharField(max_length=200)
-    category=models.CharField(max_length=50)
+    category=models.CharField(max_length=100)
     youtube_url=models.CharField(max_length=500)
     publish_date=models.CharField(max_length=30)
     analysis_status=models.BooleanField(default=False)
@@ -21,7 +21,7 @@ class video_main(models.Model):
 
 class video_sub(models.Model):
     video_main_id=models.ForeignKey(video_main,on_delete=models.CASCADE)
-    date1=models.CharField(max_length=30)
+    date1=models.CharField(max_length=100)
     view=models.BigIntegerField(default=0)
     likes=models.BigIntegerField(default=0)
     dislikes=models.BigIntegerField(default=0)
@@ -40,7 +40,7 @@ class user_channel_main(models.Model):
 
 class user_channel_sub(models.Model):
     channel_id = models.ForeignKey(user_channel_main,on_delete=models.CASCADE)
-    date1 = models.CharField(max_length=30)
+    date1 = models.CharField(max_length=100)
     view_count=models.BigIntegerField(blank=False)
     subscriber_count = models.BigIntegerField(blank=False)
     def __str__(self):

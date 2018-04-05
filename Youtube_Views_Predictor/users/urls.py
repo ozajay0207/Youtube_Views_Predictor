@@ -16,5 +16,11 @@ urlpatterns = [
     url(r'^validate_display_name/$',views.validate_display_name,name='vaidate_display_name'),
     url(r'^get_data/$',views.get_data,name="get_data"),
     url(r'^dashboard/channel/+(?P<channel_id>\d+)/$',views.view_channel_dashboard,name="view_dashboard"),
+    url(r'^dashboard/views_analysis/weekly/+(?P<video_id>\d+)/$',views.weekly_view_video_analysis,name="weekly_view_analysis"),
+    url(r'^dashboard/views_analysis/bimonthly/+(?P<video_id>\d+)/$',views.bimoonthly_view_video_analysis,name="bimonthly_view_analysis"),
+    url(r'^dashboard/views_analysis/monthly/+(?P<video_id>\d+)/$',views.monthly_view_video_analysis,name="monthly_view_analysis"),
+    url(r'^dashboard/views_analysis/total/+(?P<video_id>\d+)/$',views.total_view_video_analysis,name="total_view_analysis"),
+
+
     #url(r'^get_data/$',views.get_data,name="get_data"),
 ]

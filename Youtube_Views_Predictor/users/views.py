@@ -19,7 +19,9 @@ def DashBoard(request):
         User_Detail = user1
         video_main_obj = video_main.objects.filter(user_id=user1.pk)
         channel_main_obj = user_channel_main.objects.filter(user_id=user1.pk)
+        print(channel_main_obj)
         channel_sub_obj = user_channel_sub.objects.filter(channel_id__in=channel_main_obj)
+        print(channel_sub_obj)
         channel_obj = zip(channel_main_obj, channel_sub_obj)
         return render(request, 'users/Users_Dashboard.html',
                       {'User_Detail': User_Detail, 'video_details': video_main_obj, 'channel_details': channel_obj, })
@@ -340,8 +342,29 @@ def get_data(request):
 
         else:
             final_url = url[url.rfind('/') + 1:]
-            us1.get_channel_details([final_url], name, type, url, request)
-        return HttpResponseRedirect(reverse(DashBoard))
+            flag,obj,obj1 = us1.get_channel_details([final_url], name, type, url, request)
+            ucmain = user_channel_main.objects.get(pk=obj)
+            ucsub = user_channel_sub.objects.filter(pk=obj1)
+            user1 = users.objects.get(pk=request.session['User_Id'])
+            User_Detail = user1
+            dates = []
+            views = []
+            subscribers = []
+            for i in ucsub:
+                dates.append(i.date1)
+                views.append(i.view_count)
+                subscribers.append(i.subscriber_count)
+
+
+            if flag:
+                return render(request, 'users/less_than_7_days_channel.html', {'User_Detail': User_Detail,
+                                                                   'status': 'We are currently analysing your Video....We will notify you on your email after ' + str(
+                                                                       8 - len(ucsub)) + ' days',
+                                                                   'ucmain': ucmain, 'ucsub': ucsub,
+                                                                   'user_view_table': zip(dates, views, subscribers,)})
+
+            else:
+                return HttpResponseRedirect(reverse(DashBoard))
     else:
         return HttpResponseRedirect(reverse(DashBoard))
 

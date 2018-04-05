@@ -7,6 +7,8 @@ from datetime import datetime
 
 from users.models import user_channel_main, user_channel_sub, users
 import users.find_by_channel_id as fid
+
+
 API_KEYS = ["AIzaSyAgzszK84rYUM0ErWSdtiV-tyNGqGB3xFg","AIzaSyA3uNDJDl6WH0z8t9uB9pdmbIBpf54PVIE","AIzaSyCcLbOx4L6iTcS4NnvviLa1TfE7I1mnccU","AIzaSyAOpWL4ijH4vjO6sOF5ORIzohy_o2shL9s","AIzaSyCp8TYUqMn5LMgeHDvBcNcd2Y3pGbgVTAg"]
 channel_data={"channelTitle":[],"ChannelDescription":[],"ChannelPublishedAt":[],"channel_videoCount":[],"channel_commentCount":[],"channel_subscriberCount":[],"channel_ViewCount":[]}
 # channel_data={"social_links":[],"twitter_url":[]}
@@ -69,24 +71,30 @@ def get_channel_details(lst,name,type,url1,request):
             add_data(i,key1="channel_commentCount",key2="statistics",key3="commentCount",ch_id=i["id"])
             add_data(i,key1="channel_subscriberCount",key2="statistics",key3="subscriberCount",ch_id=i["id"])
             add_data(i,key1="channel_videoCount",key2="statistics",key3="videoCount",ch_id=i["id"])
-
-        #publish_date=channel_dict['ChannelPublishedAt']
-        #view_count=channel_dict['channel_ViewCount']
-        #subscriber_count=channel_dict['channel_subscriberCount']
-        #date1=datetime.now().strftime('%Y-%m-%d')
-
         dd=channel_dict[str(url1[url1.rfind('/') + 1:])]
+        #print(dd["ChannelPublishedAt"])
+        publish_date=dd['ChannelPublishedAt']
+
+        view_count=dd['channel_ViewCount']
+        subscriber_count=dd['channel_subscriberCount']
+        date1=datetime.now().strftime('%Y-%m-%d')
+
+
         channel_name=dd['channelTitle']
+        url1=str(url1[url1.rfind('/') + 1:])
+        #print(url1)
+        #print(obj.pk)
+        #fid.get_block(str(url1), obj.pk)
+        flag = True
+
+
         obj=user_channel_main(channel_name=channel_name,category='',channel_url=url1,channel_image_url='',analysis_status=True,user_id=users.objects.get(pk=request.session['User_Id']))
         obj.save()
-        url1=str(url1[url1.rfind('/') + 1:])
-        print(url1)
-        print(obj.pk)
-        fid.get_block(str(url1), obj.pk)
 
-        #obj1=user_channel_sub(channel_id=obj,date1=date1,view_count=view_count,subscriber_count=subscriber_count)
-        #obj1.save()
+        obj1=user_channel_sub(channel_id=obj,date1=date1,view_count=view_count,subscriber_count=subscriber_count)
+        obj1.save()
 
+        return flag,obj.pk,obj1.pk
         #print(channel_dict)
         #for key in channel_dict:
         #    print(key)

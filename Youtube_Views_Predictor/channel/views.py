@@ -83,7 +83,9 @@ def dashboard(request, channel_id):
                       {'User_Detail': '', 'Channel_Main_Data': channel_main_data, 'Channel_Sub_Data': channel_sub_data,
                        'views': increase_in_views, 'subs': increase_in_subs, 'dates': dates,
                        'table_view_increase': zip(views_for_table, increase_in_views),
-                       'table_sub_increase': zip(subs_for_table, increase_in_subs)})
+                       'table_sub_increase': zip(subs_for_table, increase_in_subs),
+					   'acc_views':view_accuracy,'increase_view':view_increase,
+                       'acc_subs': sub_accuracy, 'increase_sub': sub_increase})
 
 
 def total_view_analysis(request, channel_id):

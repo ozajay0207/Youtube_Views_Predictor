@@ -3,74 +3,164 @@
 {% endblock %}
 {% block user %}
     {% if User_Detail == '' %}
-        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5" style="margin: 12px"><i class="ti-user"></i> Login</a>
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
 
-        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5" style="margin: 12px"><i class="ti-user"></i> SignUp</a>
-        {% else %}
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
         <h3>{{ User_Detail.Display_Name }} {{ User_Detail.Email }}</h3>
     {% endif %}
 
 {% endblock %}
 {% block body %}
-                <!-- Bread crumb -->
-            <div class="row page-titles">
-                <div class="col-md-5 align-self-center">
-                    <h3 class="text-primary">Register</h3> </div>
-                <div class="col-md-7 align-self-center">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/users/">User</a></li>
-                        <li class="breadcrumb-item active">Register</li>
-                    </ol>
-                </div>
-            </div>
-            <!-- End Bread crumb -->
+
+    <script>
+        function call_modal1() {
+            var flag = 1;
+            if (document.getElementById("val-display-name").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a Name";
+                //$('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-email1").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a  Email";
+                // $('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-password1").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a Password";
+                // $('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-email1").value != "") {
+                console.log("innnn");
+                var email = document.getElementById("val-email1").value;
+                flag = 0;
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+                if (re.test(String(email).toLowerCase())) {
+                    flag = 1;
+
+                } else {
+                    flag = 0
+                    document.getElementById("alert-box1").style.visibility = "visible"
+                    document.getElementById("alert-box1").style.display = "block"
+                    document.getElementById("alert-row1").style.visibility = "visible"
+                    document.getElementById("alert-row1").style.display = "block"
+                    document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                    document.getElementById("alert-box1").innerHTML += "Please Enter a valid email ('email must have @/./com ')";
+                }
+            }
+
+            if (flag == 1) {
+                //$('#successModal').modal('show');
+                document.signup_form.submit();
+            }
+            return true;
+        }
+
+    </script>
+
+    <!-- Bread crumb -->
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-primary">Register</h3></div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/users/">User</a></li>
+                <li class="breadcrumb-item active">Register</li>
+            </ol>
+        </div>
+    </div>
+    <!-- End Bread crumb -->
 
 
     <!-- Container fluid  -->
-            <div class="container-fluid">
-                <!-- Start Page Content -->
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div id="search_result"></div>
-                            <div class="card-body">
-                                <div class="form-validation">
-                                    <form class="form-valide" action="/users/Sign_Up/" method="post" >
-                                        {% csrf_token %}
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-displayname">Display Name <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val-display-name" name="val-display-name" placeholder="Your name that should be display on our site..">
-                                            </div>
+    <div class="container-fluid">
+        <!-- Start Page Content -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div id="search_result"></div>
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" name="signup_form" id="signup_form" action="/users/Sign_Up/"
+                                  method="post">
+                                {% csrf_token %}
+
+                                <legend >Log In</legend>
+                                <br>
+                                <div class="form-group row" id="alert-row1" style="visibility:hidden;display:none">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-danger alert-dismissible"
+                                             style="visibility:hidden;display:none" id="alert-box1">
+                                            <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                            potentially negative action.
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-email">Email <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-password">Password <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input type="password" class="form-control" id="val-password" name="val-password" placeholder="Choose a safe one..">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-8 ml-auto">
-                                                <button type="submit" class="btn btn-primary">Register</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
 
-                            </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="val-displayname">Display Name <span
+                                            class="text-danger">*</span></label>
+
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="val-display-name"
+                                               name="val-display-name"
+                                               placeholder="Your name that should be display on our site..">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="val-email1">Email <span
+                                            class="text-danger">*</span></label>
+
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="val-email1" name="val-email1"
+                                               placeholder="Your valid email..">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="val-password1">Password <span
+                                            class="text-danger">*</span></label>
+
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="val-password1"
+                                               name="val-password1" placeholder="Choose a safe one..">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="button" onclick="call_modal1()" class="btn btn-primary">Register
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
-
-                <!-- End PAge Content -->
             </div>
+        </div>
 
-            <!-- End Container fluid  -->
+        <!-- End PAge Content -->
+    </div>
+
+    <!-- End Container fluid  -->
 
 {% endblock %}

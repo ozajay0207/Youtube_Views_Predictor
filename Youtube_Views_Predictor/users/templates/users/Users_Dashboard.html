@@ -39,20 +39,22 @@
 {% block body %}
     <script>
         function call_modal() {
-            var flag=1;
+            var flag = 1;
             if (document.getElementById("search").value == "") {
-                flag=0;
-                document.getElementById("message").innerHTML = "";
-                document.getElementById("message").innerHTML += "Please Enter a URL";
-
-                $('#validationModal').modal('show');
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='clos' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Enter a youtube URL";// $('#validationModal').modal('show');
             }
             if (flag == 1) {
-                $('#successModal').modal('show');
+                // $('#successModal').modal('show');
             }
             return true;
         }
-         $(function () {
+        $(function () {
             $('#successModal').on('show.bs.modal', function () {
                 var myModal = $(this);
                 clearTimeout(myModal.data('hideInterval'));
@@ -87,33 +89,43 @@
                         <h1>
                             <form action="/users/get_data/" method="post">
                                 {% csrf_token %}
-                                <div class="row">
-                                <div class="col-lg-1 mr-5">
-                                    <select class="dropdown dropdown-header " name="type">
-                                                <option class="dropdown-header">
-                                                    Video
-                                                </option>
-                                                <option class="dropdown-header">
-                                                    Channel
-                                                </option>
-                                            </select>
-                                </div>
-                                <div  class="col-lg-3">
-                                    <input type="text" class="form-control form-control-lg"
-                                                               name="name" id="name"
-                                                               placeholder="Enter Channel/Video name">
-                                </div>
-                                <div class="col-lg-5">
-                                    <input type="text" class="form-control form-control-lg"
-                                                               name="search" id="search"
-                                                               placeholder="Enter YouTube URL here">
-                                </div>
-                                <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-primary lg" onclick="return call_modal()"><i class="fa fa-search">
-                                                Get Data </i></button>
-                                </div>
+                                <div class="form-group row" id="alert-row" style="visibility:hidden;display:none">
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger alert-dismissible"
+                                             style="visibility:hidden;display:none" id="alert-box">
+                                            <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                            potentially negative action.
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1 mr-5">
+                                        <select class="dropdown dropdown-header " name="type">
+                                            <option class="dropdown-header">
+                                                Video
+                                            </option>
+                                            <option class="dropdown-header">
+                                                Channel
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control form-control-lg"
+                                               name="name" id="name"
+                                               placeholder="Enter Channel/Video name">
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control form-control-lg"
+                                               name="search" id="search"
+                                               placeholder="Enter YouTube URL here">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-primary lg" onclick="call_modal()"><i
+                                                class="fa fa-search">
+                                            Get Data </i></button>
+                                    </div>
+                                </div>
+                            </form>
                         </h1>
                     </div>
                 </div>
@@ -154,7 +166,9 @@
                                         {% else %}
                                             <td><input type="button" class="btn btn-primary" value="Start"/></td>
                                         {% endif %}
-                                        <td width="10%"><a class="btn btn-primary" href="/users/dashboard/channel/{{ c.id }}/"> View Analysis</a></td>
+                                        <td width="10%"><a class="btn btn-primary"
+                                                           href="/users/dashboard/channel/{{ c.id }}/"> View
+                                            Analysis</a></td>
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -189,7 +203,9 @@
                                         {% else %}
                                             <td><input type="button" class="btn btn-primary" value="Start"/></td>
                                         {% endif %}
-                                        <td width="10%"><a class="btn btn-primary" href="/users/dashboard/views_analysis/total/{{ video.id }}/">View Analysis</a></td>
+                                        <td width="10%"><a class="btn btn-primary"
+                                                           href="/users/dashboard/views_analysis/total/{{ video.id }}/">View
+                                            Analysis</a></td>
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -209,31 +225,6 @@
         </div>
         <!-- End Page wrapper  -->
     </div>
-    <div id="successModal" class="modal fade">
-        <div class="modal-dialog" style="width:30%">
-            <div class="modal-content">
-                <div class="modal-body">
-                    Success
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="validationModal" class="modal fade">
-        <div class="modal-dialog" style="width:30%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    WARNING
-                </div>
-                <div class="modal-body">
-                    <div id="message"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js">
 

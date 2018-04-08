@@ -19,6 +19,7 @@
                     <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
                 </div>
             </a>
+
             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                 <ul class="dropdown-user">
                     <li><a href="#"><i class="ti-user"></i> Profile</a></li>
@@ -31,13 +32,139 @@
     {% endif %}
 {% endblock %}
 {% block body %}
+    <script>
+        function call_modal() {
+            var flag = 1;
+            if (document.getElementById("val-email").value == "") {
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Please Enter a  email";
+
+                //$('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-password").value == "") {
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Please Enter a  password";
+                // $('#validationModal').modal('show');
+            } else if (document.getElementById("val-email").value != "") {
+                flag = 0
+                console.log("in");
+
+                $.ajax({
+                    url: '/users/validate_email/',
+                    data: {
+                        'username': document.getElementById("val-email").value
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (!data.is_taken) {
+                            document.getElementById("alert-box").style.visibility = "visible"
+                            document.getElementById("alert-box").style.display = "block"
+                            document.getElementById("alert-row").style.visibility = "visible"
+                            document.getElementById("alert-row").style.display = "block"
+                            document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                            document.getElementById("alert-box").innerHTML += "Email is not registered";
+                        } else {
+                            if (data.pass != document.getElementById("val-password").value) {
+                                document.getElementById("alert-box").style.visibility = "visible"
+                                document.getElementById("alert-box").style.display = "block"
+                                document.getElementById("alert-row").style.visibility = "visible"
+                                document.getElementById("alert-row").style.display = "block"
+                                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                                document.getElementById("alert-box").innerHTML += "Password doesn't match";
+                            }
+                            else {
+                                flag = 1
+                                document.login_form.submit();
+                            }
+                        }
+                    }
+                });
+            }
+            if (flag == 1) {
+                //$('#successModal').modal('show');
+                document.login_form.submit();
+            }
+            return true;
+        }
+        function call_modal1() {
+            var flag = 1;
+            if (document.getElementById("val-display-name").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a Name";
+                //$('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-email1").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a  Email";
+                // $('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-password1").value == "") {
+                flag = 0;
+                document.getElementById("alert-box1").style.visibility = "visible"
+                document.getElementById("alert-box1").style.display = "block"
+                document.getElementById("alert-row1").style.visibility = "visible"
+                document.getElementById("alert-row1").style.display = "block"
+                document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box1").innerHTML += "Please Enter a Password";
+                // $('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-email1").value != "") {
+                console.log("innnn");
+                var email = document.getElementById("val-email1").value;
+                flag = 0;
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+                if (re.test(String(email).toLowerCase())) {
+                    flag = 1;
+
+                } else {
+                    flag = 0
+                    document.getElementById("alert-box1").style.visibility = "visible"
+                    document.getElementById("alert-box1").style.display = "block"
+                    document.getElementById("alert-row1").style.visibility = "visible"
+                    document.getElementById("alert-row1").style.display = "block"
+                    document.getElementById("alert-box1").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                    document.getElementById("alert-box1").innerHTML += "Please Enter a valid email ('email must have @/./com ')";
+                }
+            }
+
+            if (flag == 1) {
+                //$('#successModal').modal('show');
+                document.signup_form.submit();
+            }
+            return true;
+        }
+    </script>
+
     <div class="jumbotron">
         <h1 class="h1">Welcome to Youtube Views Predictor site</h1>
         <br/>
+
         <p class="lead">We Provide Analysis and prediction of various Youtube channels and views <br/>
             Don't forget to check latest analysis of top youtube's channels as well as check analysis for your channel
         </p>
-        <p class="lead">Not Registered Yet? <a class="btn btn-lg btn-primary" href="#" role="button">Sign UP</a></p>
+
+        <!-- <p class="lead">Not Registered Yet? <a class="btn btn-lg btn-primary" href="#" role="button">Sign UP</a></p>-->
     </div>
     <div class="container">
         <div class="row">
@@ -46,14 +173,26 @@
                 <div class="card border-secondary" style="border-width: 1px ;min-height: 330px">
                     <div class="card-body">
                         <div class="form-validation">
-                            <form class="form-valide" action="/users/Sign_In/" method="post">
+                            <form class="form-valide" name="login_form" id="login_form" action="/users/Sign_In/"
+                                  method="post">
                                 {% csrf_token %}
                                 <fieldset>
                                     <legend>Log In</legend>
-                                    <br />
+                                    <br/>
+
+                                    <div class="form-group row" id="alert-row" style="visibility:hidden;display:none">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-danger alert-dismissible"
+                                                 style="visibility:hidden;display:none" id="alert-box">
+                                                <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                                potentially negative action.
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-email">Email <span
                                                 class="text-danger">*</span></label>
+
                                         <div class="col-lg-6">
                                             <input type="text" class="form-control" id="val-email" name="val-email"
                                                    placeholder="Your valid email..">
@@ -62,6 +201,7 @@
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-password">Password <span
                                                 class="text-danger">*</span></label>
+
                                         <div class="col-lg-6">
                                             <input type="password" class="form-control" id="val-password"
                                                    name="val-password"
@@ -70,7 +210,8 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-lg-8 ml-auto">
-                                            <button type="submit" class="btn btn-primary">Login</button>
+                                            <button type="button" onclick="call_modal()" class="btn btn-primary">Login
+                                            </button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -87,13 +228,24 @@
                         <div class="form-validation">
 
 
-                            <form class="form-valide" action="/users/Sign_Up/" method="post">
+                            <form class="form-valide" name="signup_form" id="signup_form" action="/users/Sign_Up/"
+                                  method="post">
                                 {% csrf_token %}
                                 <fieldset>
                                     <legend>Sign Up</legend>
                                     <div class="form-group row">
+                                        <div class="col-lg-12" style="visibility:hidden;display:none" id="alert-row1">
+                                            <div class="alert alert-danger alert-dismissible"
+                                                 style="visibility:hidden;display:none" id="alert-box1">
+                                                <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                                potentially negative action.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-displayname">Display Name <span
                                                 class="text-danger">*</span></label>
+
                                         <div class="col-lg-6">
                                             <input type="text" class="form-control" id="val-display-name"
                                                    name="val-display-name"
@@ -101,24 +253,28 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-email">Email <span
+                                        <label class="col-lg-4 col-form-label" for="val-email1">Email <span
                                                 class="text-danger">*</span></label>
+
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="val-email" name="val-email"
+                                            <input type="text" class="form-control" id="val-email1" name="val-email1"
                                                    placeholder="Your valid email..">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-password">Password <span
+                                        <label class="col-lg-4 col-form-label" for="val-password1">Password <span
                                                 class="text-danger">*</span></label>
+
                                         <div class="col-lg-6">
-                                            <input type="password" class="form-control" id="val-password"
-                                                   name="val-password" placeholder="Choose a safe one..">
+                                            <input type="password" class="form-control" id="val-password1"
+                                                   name="val-password1" placeholder="Choose a safe one..">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-lg-8 ml-auto">
-                                            <button type="submit" class="btn btn-primary">Register</button>
+                                            <button type="button" onclick="call_modal1()" class="btn btn-primary">
+                                                Register
+                                            </button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -138,6 +294,7 @@
                         <img class="card-img-top img-responsive align-self-center" src="{{ channel.channel_img_url }}"
                              style="height: 200px;width: 200px;">
                         <br/>
+
                         <div class="card-body" style="min-height: 90px;">
                             <h3 class="card-title">{{ channel.channel_name }}</h3>
                             <i class="card-subtitle">{{ channel.channel_category }}</i>
@@ -149,5 +306,28 @@
             {% endfor %}
         </div>
     </div>
-
+    <div id="successModal" class="modal fade">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Success
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="validationModal" class="modal fade">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    WARNING
+                </div>
+                <div class="modal-body">
+                    <div id="message"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -3,66 +3,153 @@
 {% endblock %}
 {% block user %}
     {% if User_Detail == '' %}
-        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5" style="margin: 12px"><i class="ti-user"></i> Login</a>
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
 
-        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5" style="margin: 12px"><i class="ti-user"></i> SignUp</a>
-        {% else %}
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
         <h3>{{ User_Detail.Display_Name }} {{ User_Detail.Email }}</h3>
     {% endif %}
 
 {% endblock %}
 {% block body %}
-                <!-- Bread crumb -->
-            <div class="row page-titles">
-                <div class="col-md-5 align-self-center">
-                    <h3 class="text-primary">Login</h3> </div>
-                <div class="col-md-7 align-self-center">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/users/">User</a></li>
-                        <li class="breadcrumb-item active">Login</li>
-                    </ol>
-                </div>
-            </div>
-            <!-- End Bread crumb -->
+
+    <script>
+        function call_modal() {
+            var flag = 1;
+            if (document.getElementById("val-email").value == "") {
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Please Enter a  email";
+
+                //$('#validationModal').modal('show');
+            }
+            else if (document.getElementById("val-password").value == "") {
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Please Enter a  password";
+                // $('#validationModal').modal('show');
+            } else if (document.getElementById("val-email").value != "") {
+                flag = 0
+                console.log("in");
+
+                $.ajax({
+                    url: '/users/validate_email/',
+                    data: {
+                        'username': document.getElementById("val-email").value
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (!data.is_taken) {
+                            document.getElementById("alert-box").style.visibility = "visible"
+                            document.getElementById("alert-box").style.display = "block"
+                            document.getElementById("alert-row").style.visibility = "visible"
+                            document.getElementById("alert-row").style.display = "block"
+                            document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                            document.getElementById("alert-box").innerHTML += "Email is not registered";
+                        } else {
+                            if (data.pass != document.getElementById("val-password").value) {
+                                document.getElementById("alert-box").style.visibility = "visible"
+                                document.getElementById("alert-box").style.display = "block"
+                                document.getElementById("alert-row").style.visibility = "visible"
+                                document.getElementById("alert-row").style.display = "block"
+                                document.getElementById("alert-box").innerHTML = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+                                document.getElementById("alert-box").innerHTML += "Password doesn't match";
+                            }
+                            else {
+                                flag = 1
+                                document.login_form.submit();
+                            }
+                        }
+                    }
+                });
+            }
+            if (flag == 1) {
+                //$('#successModal').modal('show');
+                document.login_form.submit();
+            }
+            return true;
+        }
+    </script>
+
+    <!-- Bread crumb -->
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-primary">Login</h3></div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/users/">User</a></li>
+                <li class="breadcrumb-item active">Login</li>
+            </ol>
+        </div>
+    </div>
+    <!-- End Bread crumb -->
 
 
     <!-- Container fluid  -->
-            <div class="container-fluid">
-                <!-- Start Page Content -->
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-validation">
-                                    <form class="form-valide" action="/users/Sign_In/" method="post" >
-                                        {% csrf_token %}
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-email">Email <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
-                                            </div>
+    <div class="container-fluid">
+        <!-- Start Page Content -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" name="login_form" id="login_form"  action="/users/Sign_In/" method="post">
+                                <legend >Log In</legend>
+                                <br>
+                                <div class="form-group row" id="alert-row" style="visibility:hidden;display:none">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-danger alert-dismissible"
+                                             style="visibility:hidden;display:none" id="alert-box">
+                                            <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                            potentially negative action.
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-password">Password <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input type="password" class="form-control" id="val-password" name="val-password" placeholder="Choose a safe one..">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-8 ml-auto">
-                                                <button type="submit" class="btn btn-primary">Login</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
 
-                            </div>
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="val-email">Email <span
+                                            class="text-danger">*</span></label>
+
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="val-email" name="val-email"
+                                               placeholder="Your valid email..">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="val-password">Password <span
+                                            class="text-danger">*</span></label>
+
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="val-password"
+                                               name="val-password" placeholder="Choose a safe one..">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="button" onclick="call_modal()" class="btn btn-primary">Login</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
-                <!-- End PAge Content -->
             </div>
-            <!-- End Container fluid  -->
+        </div>
+        <!-- End PAge Content -->
+    </div>
+    <!-- End Container fluid  -->
 
 
 

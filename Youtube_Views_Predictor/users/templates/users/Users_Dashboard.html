@@ -50,21 +50,12 @@
                 document.getElementById("alert-box").innerHTML += "Enter a youtube URL";// $('#validationModal').modal('show');
             }
             if (flag == 1) {
+                document.form_url.submit();
                 // $('#successModal').modal('show');
             }
             return true;
         }
-        $(function () {
-            $('#successModal').on('show.bs.modal', function () {
-                var myModal = $(this);
-                clearTimeout(myModal.data('hideInterval'));
-                myModal.data('hideInterval', setTimeout(function () {
-                    alert("Called")
-                    myModal.modal('hide');
-                    document.course_form.submit();
-                }, 1500));
-            });
-        });
+
     </script>
     <!-- Page wrapper  -->
     <div class="bg-light">
@@ -87,7 +78,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <h1>
-                            <form action="/users/get_data/" method="post">
+                            <form action="/users/get_data/" name="form_url" id="form_url" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row" id="alert-row" style="visibility:hidden;display:none">
                                     <div class="col-sm-12">

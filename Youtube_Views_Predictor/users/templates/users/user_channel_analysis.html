@@ -24,9 +24,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                 <ul class="dropdown-user">
-                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
-                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    <!--   <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                       <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                    -->
+
+                    <li><a href="/users/"><i class="ti-dashboard"></i> Dashboard</a></li>
                     <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
             </div>
@@ -59,16 +61,19 @@
                             class="hide-menu">Views Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
                             {% if  Channel_Sub_Data.count >= 7 %}
-                                <li><a href="/users/dashboard/channel/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
-                                    Analysis</a></li>
+                                <li>
+                                    <a href="/users/dashboard/channel/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
+                                        Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 15 %}
-                                <li><a href="/users/dashboard/channel/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
-                                    Days Analysis</a></li>
+                                <li>
+                                    <a href="/users/dashboard/channel/views_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
+                                        Days Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 30 %}
-                                <li><a href="/users/dashboard/channel/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
-                                    Analysis</a></li>
+                                <li>
+                                    <a href="/users/dashboard/channel/views_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
+                                        Analysis</a></li>
                             {% endif %}
                             {% if Channel_Sub_Data.count >= 1 %}
                                 <li><a href="/users/dashboard/channel/{{ Channel_Main_Data.id }}/">Total
@@ -87,12 +92,14 @@
                                     Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 15 %}
-                                <li><a href="/users/dashboard/channel/subs_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
-                                    Days Analysis</a></li>
+                                <li>
+                                    <a href="/users/dashboard/channel/subs_analysis/bimonthly/{{ Channel_Main_Data.id }}/">15
+                                        Days Analysis</a></li>
                             {% endif %}
                             {% if  Channel_Sub_Data.count >= 30 %}
-                                <li><a href="/users/dashboard/channel/subs_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
-                                    Analysis</a></li>
+                                <li>
+                                    <a href="/users/dashboard/channel/subs_analysis/monthly/{{ Channel_Main_Data.id }}/">Monthly
+                                        Analysis</a></li>
                             {% endif %}
                             {% if Channel_Sub_Data.count >= 1 %}
                                 <li><a href="/users/dashboard/channel/subs_analysis/total/{{ Channel_Main_Data.id }}/">Total

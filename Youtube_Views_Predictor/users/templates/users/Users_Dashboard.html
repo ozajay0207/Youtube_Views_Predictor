@@ -48,6 +48,20 @@
                 document.getElementById("alert-row").style.display = "block"
                 document.getElementById("alert-box").innerHTML = "<a href='#' class='clos' data-dismiss='alert' aria-label='close'>&times;</a>";
                 document.getElementById("alert-box").innerHTML += "Enter a youtube URL";// $('#validationModal').modal('show');
+            } else if (document.getElementById("search").value != "") {
+                var url = document.getElementById("search").value;
+                var re = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm;
+                if (re.test(String(url).toLowerCase())) {
+                    flag = 1;
+                } else {
+                    flag = 0;
+                    document.getElementById("alert-box").style.visibility = "visible"
+                    document.getElementById("alert-box").style.display = "block"
+                    document.getElementById("alert-row").style.visibility = "visible"
+                    document.getElementById("alert-row").style.display = "block"
+                    document.getElementById("alert-box").innerHTML = "<a href='#' class='clos' data-dismiss='alert' aria-label='close'>&times;</a>";
+                    document.getElementById("alert-box").innerHTML += "Enter a valid youtube URL";
+                }
             }
             if (flag == 1) {
                 document.form_url.submit();

@@ -20,7 +20,7 @@ def DashBoard(request):
         video_main_obj = video_main.objects.filter(user_id=user1.pk)
         channel_main_obj = user_channel_main.objects.filter(user_id=user1.pk)
         # print(channel_main_obj)
-        channel_sub_obj = user_channel_sub.objects.filter(channel_id__in=channel_main_obj)
+        channel_sub_obj = user_channel_sub.objects.filter(channel_id__in=channel_main_obj).order_by("-date1")
         # print(channel_sub_obj)
         channel_obj = zip(channel_main_obj, channel_sub_obj)
         return render(request, 'users/Users_Dashboard.html',
@@ -394,7 +394,6 @@ def total_view_video_analysis(request, video_id):
                                'label6': 'History of Previous Predictions'})
             else:
                 c1 = channel_sub_data1
-                channel_sub_data1 = channel_sub_data1[10:]
                 # print(len(channel_sub_data1))
                 old_dates = []
                 old_views = []
@@ -1240,7 +1239,7 @@ def view_channel_dashboard(request, channel_id):
             old_dates1 = old_dates1[::-1]
             accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
             avg_accuracy = average(accuracy_in_old_views)
-            # print('%.5f' % (avg_accuracy))
+            avg_accuracy = '%.5f' % (avg_accuracy)
 
             if 'User_Id' in request.session:
                 user1 = users.objects.get(pk=request.session['User_Id'])
@@ -1384,7 +1383,7 @@ def weekly_view_channel_analysis(request,channel_id):
         old_dates1 = old_dates1[::-1]
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
-            # print('%.5f' % (avg_accuracy))
+        avg_accuracy = '%.5f' % (avg_accuracy)
 
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
@@ -1493,7 +1492,7 @@ def bimonthly_view_channel_analysis(request,channel_id):
         old_dates1 = old_dates1[::-1]
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
-            # print('%.5f' % (avg_accuracy))
+        avg_accuracy='%.5f' % (avg_accuracy)
 
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
@@ -1603,7 +1602,7 @@ def monthly_view_channel_analysis(request,channel_id):
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
             # print('%.5f' % (avg_accuracy))
-
+        avg_accuracy = '%.5f' % (avg_accuracy)
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
         return render(request, 'users/user_channel_analysis.html',
@@ -1712,7 +1711,7 @@ def weekly_subs_channel_analysis(request,channel_id):
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
             # print('%.5f' % (avg_accuracy))
-
+        avg_accuracy = '%.5f' % (avg_accuracy)
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
         return render(request, 'users/user_channel_analysis.html',
@@ -1821,7 +1820,7 @@ def bimonthly_subs_channel_analysis(request,channel_id):
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
             # print('%.5f' % (avg_accuracy))
-
+        avg_accuracy = '%.5f' % (avg_accuracy)
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
         return render(request, 'users/user_channel_analysis.html',
@@ -1930,7 +1929,7 @@ def monthly_subs_channel_analysis(request,channel_id):
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
             # print('%.5f' % (avg_accuracy))
-
+        avg_accuracy = '%.5f' % (avg_accuracy)
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
         return render(request, 'users/user_channel_analysis.html',
@@ -2038,7 +2037,7 @@ def total_subs_channel_analysis(request,channel_id):
         accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
         avg_accuracy = average(accuracy_in_old_views)
             # print('%.5f' % (avg_accuracy))
-
+        avg_accuracy = '%.5f' % (avg_accuracy)
         user1 = users.objects.get(pk=request.session['User_Id'])
         User_Detail = user1
         return render(request, 'users/user_channel_analysis.html',
@@ -2051,7 +2050,7 @@ def total_subs_channel_analysis(request,channel_id):
                                                       accuracy_in_old_views1),
                                'avg_accuracy': avg_accuracy,
                                'Channel_Sub_Data': channel_sub_data,
-                               'type': 'Weekly',
+                               'type': 'Total',
                                'type1':'Subscriber',
                                'label1': 'Increments in Subscribers', 'label2': 'Prediction of Daily Subscribers Increase For Next Month',
                                'label3': 'Accuracy On Total Data Available',

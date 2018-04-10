@@ -154,6 +154,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Channel Name</th>
+                                    <th>Category</th>
                                     <th>View Count</th>
                                     <th>Subscribers</th>
                                     <th></th>
@@ -162,9 +163,10 @@
                                 {% for c,c1 in channel_details %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
-                                        <td width="40%">{{ c.channel_name }}</td>
-                                        <td width="20%">{{ c1.view_count }}</td>
-                                        <td width="20%">{{ c1.subscriber_count }}</td>
+                                        <td width="30%">{{ c.channel_name }}</td>
+                                        <td width="30%">{{ c.category }}</td>
+                                        <td width="15%">{{ c1.view_count }}</td>
+                                        <td width="15%">{{ c1.subscriber_count }}</td>
                                         {% if c.analysis_status == True %}
                                             <td width="10%"><input type="button" class="btn btn-danger" value="Stop"/>
                                             </td>

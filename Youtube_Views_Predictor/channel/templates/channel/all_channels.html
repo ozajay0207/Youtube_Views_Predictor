@@ -21,9 +21,9 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                 <ul class="dropdown-user">
-                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <!--<li><a href="#"><i class="ti-user"></i> Profile</a></li>
                     <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    --><li><a href="/users/"><i class="ti-dashboard"></i> Dashboard</a></li>
                     <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
             </div>
@@ -49,10 +49,10 @@
                         <img class="card-img-top img-responsive align-self-center" src="{{ channel.channel_img_url }}"
                              style="height: 200px;width: 200px;">
                         <br/>
-                        <div class="card-body" style="min-height: 90px;">
+                        <div class="card-body" style="min-height: 90px;" align="center">
                             <h3 class="card-title">{{ channel.channel_name }}</h3>
                             <i class="card-subtitle">{{ channel.channel_category }}</i>
-                            <div>
+                            <div align="center">
                                 <a href="/channel/dashboard/{{ channel.pk }}/" class="btn btn-primary">View Analysis</a>
                             </div>
                         </div>

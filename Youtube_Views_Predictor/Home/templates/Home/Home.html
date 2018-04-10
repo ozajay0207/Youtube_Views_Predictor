@@ -32,6 +32,7 @@
     {% endif %}
 {% endblock %}
 {% block body %}
+
     <script>
         function call_modal() {
             var flag = 1;
@@ -171,7 +172,7 @@
 
             <div class="col-lg-6">
                 <div class="card border-secondary" style="border-width: 1px ;min-height: 330px">
-                    <div class="card-body">
+                    <div class="card-body" style="min-height: 310px">
                         <div class="form-validation">
                             <form class="form-valide" name="login_form" id="login_form" action="/users/Sign_In/"
                                   method="post">

@@ -157,7 +157,6 @@
                                     <th>View Count</th>
                                     <th>Subscribers</th>
                                     <th></th>
-                                    <th></th>
                                 </tr>
                                 {% for c,c1 in channel_details %}
                                     <tr>
@@ -165,12 +164,6 @@
                                         <td width="40%">{{ c.channel_name }}</td>
                                         <td width="20%">{{ c1.view_count }}</td>
                                         <td width="20%">{{ c1.subscriber_count }}</td>
-                                        {% if c.analysis_status == True %}
-                                            <td width="10%"><input type="button" class="btn btn-danger" value="Stop"/>
-                                            </td>
-                                        {% else %}
-                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
-                                        {% endif %}
                                         <td width="10%"><a class="btn btn-primary"
                                                            href="/users/dashboard/channel/{{ c.id }}/"> View
                                             Analysis</a></td>
@@ -195,19 +188,12 @@
                                     <th>Video Name</th>
                                     <th>Category</th>
                                     <th></th>
-                                    <th></th>
                                 </tr>
                                 {% for video in video_details %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td width="40%">{{ video.video_name }}</td>
                                         <td width="40%">{{ video.category }}</td>
-                                        {% if video.analysis_status == True %}
-                                            <td width="10%"><input type="button" class="btn btn-danger" value="Stop"/>
-                                            </td>
-                                        {% else %}
-                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
-                                        {% endif %}
                                         <td width="10%"><a class="btn btn-primary"
                                                            href="/users/dashboard/views_analysis/total/{{ video.id }}/">View
                                             Analysis</a></td>

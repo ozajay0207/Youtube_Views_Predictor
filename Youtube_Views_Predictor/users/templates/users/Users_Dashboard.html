@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block left_drawer %}
+{% endblock %}
+
+
+
+{% block user %}
+
+    {% if User_Detail == '' %}
+        <a href="/users/login/" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> Login</a>
+
+        <a href="/users/register" type="button" class="btn btn-primary btn-flat btn-addon btn-sm m-b-10 m-l-5"
+           style="margin: 12px"><i class="ti-user"></i> SignUp</a>
+    {% else %}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+                <div class="avatar-circle">
+                    <span class="initials">{{ User_Detail.Display_Name|make_list|first|title }}</span>
+                </div>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                <ul class="dropdown-user">
+                 <!--   <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                  -->  <li><a href="/users/"><i class="ti-dashboard"></i> Dashboard</a></li>
+                   <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <script>
+        function call_modal() {
+            var flag = 1;
+            if (document.getElementById("search").value == "") {
+                flag = 0;
+                document.getElementById("alert-box").style.visibility = "visible"
+                document.getElementById("alert-box").style.display = "block"
+                document.getElementById("alert-row").style.visibility = "visible"
+                document.getElementById("alert-row").style.display = "block"
+                document.getElementById("alert-box").innerHTML = "<a href='#' class='clos' data-dismiss='alert' aria-label='close'>&times;</a>";
+                document.getElementById("alert-box").innerHTML += "Enter a youtube URL";// $('#validationModal').modal('show');
+            } else if (document.getElementById("search").value != "") {
+                var url = document.getElementById("search").value;
+                var re = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm;
+                if (re.test(String(url).toLowerCase())) {
+                    flag = 1;
+                } else {
+                    flag = 0;
+                    document.getElementById("alert-box").style.visibility = "visible"
+                    document.getElementById("alert-box").style.display = "block"
+                    document.getElementById("alert-row").style.visibility = "visible"
+                    document.getElementById("alert-row").style.display = "block"
+                    document.getElementById("alert-box").innerHTML = "<a href='#' class='clos' data-dismiss='alert' aria-label='close'>&times;</a>";
+                    document.getElementById("alert-box").innerHTML += "Enter a valid youtube URL";
+                }
+            }
+            if (flag == 1) {
+                document.form_url.submit();
+                // $('#successModal').modal('show');
+            }
+            return true;
+        }
+
+    </script>
+    <!-- Page wrapper  -->
+    <div class="bg-light">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Dashboard</h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+        <!-- Container fluid  -->
+        <div class="container-fluid">
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <h1>
+                            <form action="/users/get_data/" name="form_url" id="form_url" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row" id="alert-row" style="visibility:hidden;display:none">
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger alert-dismissible"
+                                             style="visibility:hidden;display:none" id="alert-box">
+                                            <strong>Danger!</strong> This alert box could indicate a dangerous or
+                                            potentially negative action.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <select class="form-control" name="type" id="">
+                                            <option class="">
+                                                Video
+                                            </option>
+                                            <option class="">
+                                                Channel
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 ">
+                                        <input type="text" class="form-control"
+                                               name="name" id="name"
+                                               placeholder="Enter Channel/Video name">
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control"
+                                               name="search" id="search"
+                                               placeholder="Enter YouTube URL here">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-primary lg" onclick="call_modal()"><i
+                                                class="fa fa-search">
+                                            Get Data </i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End PAge Content -->
+        </div>
+
+        <!-- End Container fluid  -->
+        <!-- Row for Views -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h2>Channels Under Analysis:</h2>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <table class="table table-responsive">
+                                <tr>
+                                    <th></th>
+                                    <th>Channel Name</th>
+                                    <th>Category</th>
+                                    <th>View Count</th>
+                                    <th>Subscribers</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                {% for c,c1 in channel_details %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td width="30%">{{ c.channel_name }}</td>
+                                        <td width="30%">{{ c.category }}</td>
+                                        <td width="15%">{{ c1.view_count }}</td>
+                                        <td width="15%">{{ c1.subscriber_count }}</td>
+                                        {% if c.analysis_status == True %}
+                                            <td width="10%"><input type="button" class="btn btn-danger" value="Stop"/>
+                                            </td>
+                                        {% else %}
+                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
+                                        {% endif %}
+                                        <td width="10%"><a class="btn btn-primary"
+                                                           href="/users/dashboard/channel/{{ c.id }}/"> View
+                                            Analysis</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h2>Videos Under Analysis:</h2>
+                        </div>
+                        <div class="card-body" style="width:100%;height:120%">
+                            <table class="table table-responsive">
+                                <tr>
+                                    <th></th>
+                                    <th>Video Name</th>
+                                    <th>Category</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                {% for video in video_details %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td width="40%">{{ video.video_name }}</td>
+                                        <td width="40%">{{ video.category }}</td>
+                                        {% if video.analysis_status == True %}
+                                            <td width="10%"><input type="button" class="btn btn-danger" value="Stop"/>
+                                            </td>
+                                        {% else %}
+                                            <td><input type="button" class="btn btn-primary" value="Start"/></td>
+                                        {% endif %}
+                                        <td width="10%"><a class="btn btn-primary"
+                                                           href="/users/dashboard/views_analysis/total/{{ video.id }}/">View
+                                            Analysis</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+            </div>
+            <!-- /# column -->
+
+            <!-- End Row for Views -->
+            <!-- Row for Subscribers -->
+            <!-- End Row for Suscribers -->
+            <!-- footer -->
+
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <!-- chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js">
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+    <script>
+
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+                datasets: [{
+                    label: '# of Views',
+                    data: [11000, 11600, 13000, 15000, 22000, 30000, 35000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart1").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["13 March", "14 March", "15 March", "16 March", "17 March", "18 March", "19 March"],
+                datasets: [{
+                    label: '# of Subscribers',
+                    data: [1000, 1500, 1700, 1800, 2000, 5000, 9000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+
+
+{% endblock %}

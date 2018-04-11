@@ -24,9 +24,9 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                 <ul class="dropdown-user">
-                    <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                    <!--<li><a href="#"><i class="ti-user"></i> Profile</a></li>
                     <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                    <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
+                    --><li><a href="/users/"><i class="ti-dashboard"></i> Dashboard</a></li>
                     <li><a href="/users/Sign_Out/"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
             </div>
@@ -41,6 +41,7 @@
             <!-- Sidebar navigation-->
             <nav class="sidebar-nav">
                 <ul id="sidebarnav">
+                    <li><a href="/channel/dashboard/{{ Channel_Main_Data.id }}/"><b>Back to Channel Dashboard</b></a></li>
                     <li class="nav-devider"></li>
 
                     <li><img src="{{ Channel_Main_Data.channel_img_url }}" height="10%" width="100%"></li>
@@ -51,9 +52,7 @@
                     <!-- <li><a href="index1.html">Analytics </a></li> -->
                     <!-- </ul> -->
                     <!-- </li> -->
-                    <li><a href="/channel/dashboard/{{ Channel_Main_Data.id }}/" aria-expanded="false"><i
-                            class="fa fa-angle-double-left"></i><span
-                            class="hide-menu">Back to Channel Dashboard</span></a>
+
                     <li class="nav-label">Statistics</li>
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
                             class="hide-menu">Views Analysis</span></a>

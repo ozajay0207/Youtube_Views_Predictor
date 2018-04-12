@@ -189,13 +189,15 @@
                                     <th></th>
                                     <th>Video Name</th>
                                     <th>Category</th>
+                                    <th>View Count</th>
                                     <th></th>
                                 </tr>
-                                {% for video in video_details %}
+                                {% for video,view1 in video_details %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
-                                        <td width="40%">{{ video.video_name }}</td>
-                                        <td width="40%">{{ video.category }}</td>
+                                        <td width="30%">{{ video.video_name }}</td>
+                                        <td width="30%">{{ video.category }}</td>
+                                        <td width="30%">{{ view1.view }}</td>
                                         <td width="10%"><a class="btn btn-primary"
                                                            href="/users/dashboard/views_analysis/total/{{ video.id }}/">View
                                             Analysis</a></td>

@@ -7,7 +7,7 @@ from datetime import datetime
 
 from users.models import user_channel_main, user_channel_sub, users
 import users.find_by_channel_id as fid
-
+import Extra_details_scrapper as eds
 
 API_KEYS = ["AIzaSyAgzszK84rYUM0ErWSdtiV-tyNGqGB3xFg","AIzaSyA3uNDJDl6WH0z8t9uB9pdmbIBpf54PVIE","AIzaSyCcLbOx4L6iTcS4NnvviLa1TfE7I1mnccU","AIzaSyAOpWL4ijH4vjO6sOF5ORIzohy_o2shL9s","AIzaSyCp8TYUqMn5LMgeHDvBcNcd2Y3pGbgVTAg"]
 channel_data={"channelTitle":[],"ChannelDescription":[],"ChannelPublishedAt":[],"channel_videoCount":[],"channel_commentCount":[],"channel_subscriberCount":[],"channel_ViewCount":[]}
@@ -44,16 +44,23 @@ def get_url_list(new_lst_len,lst):
     return url_list
 
 
-def get_channel_details(lst,name,type,url1,request):
-    print('in')
+def get_channel_details(lst,request):
+    channel_url=lst[0]
+    img,cat,url=eds.set_url(str(channel_url))
+    url1=url
+    #print(img,cat,url)
+    #print('in')
+    lst[:]=[]
+    print("\n\n\nSC",url)
+    lst.append(url[url.rfind('/') + 1:])
     new_lst_len = len(lst)
     url_list = get_url_list(new_lst_len,lst)
-    #print("url list length",len(url_list))
-
+    print("\n\nurl list ",url_list)
+    print(url_list)
     c=0
     for urls in url_list:
         #print(c)
-        # #print(urls)
+        #print(urls)
         k = random.randint(0,4)
         API_KEY = API_KEYS[k]
         url = "https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id="+urls+"&key="+API_KEY
@@ -71,6 +78,10 @@ def get_channel_details(lst,name,type,url1,request):
             add_data(i,key1="channel_commentCount",key2="statistics",key3="commentCount",ch_id=i["id"])
             add_data(i,key1="channel_subscriberCount",key2="statistics",key3="subscriberCount",ch_id=i["id"])
             add_data(i,key1="channel_videoCount",key2="statistics",key3="videoCount",ch_id=i["id"])
+        print("\n\n\n\n")
+        print(channel_dict)
+        print(url1)
+        print("\n\n\n\n")
         dd=channel_dict[str(url1[url1.rfind('/') + 1:])]
         #print(dd["ChannelPublishedAt"])
         publish_date=dd['ChannelPublishedAt']
@@ -81,14 +92,14 @@ def get_channel_details(lst,name,type,url1,request):
 
 
         channel_name=dd['channelTitle']
-        url1=str(url1[url1.rfind('/') + 1:])
+
         #print(url1)
         #print(obj.pk)
         #fid.get_block(str(url1), obj.pk)
         flag = True
 
 
-        obj=user_channel_main(channel_name=channel_name,category='',channel_url=url1,channel_image_url='',analysis_status=True,user_id=users.objects.get(pk=request.session['User_Id']))
+        obj=user_channel_main(channel_name=channel_name,category=cat,channel_url=url1,channel_image_url=img,analysis_status=True,user_id=users.objects.get(pk=request.session['User_Id']))
         obj.save()
 
         obj1=user_channel_sub(channel_id=obj,date1=date1,view_count=view_count,subscriber_count=subscriber_count)

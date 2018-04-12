@@ -34,3 +34,6 @@ def contact_us(request):
             User_Detail = ''
         #return HttpResponseRedirect('/Home/contact_us/')
         return render(request,'Home/contact_us.html',{'User_Detail': User_Detail,})
+
+def about_us(request):
+    return render(request,'Home/about_us.html')

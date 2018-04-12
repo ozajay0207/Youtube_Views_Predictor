@@ -41,8 +41,8 @@ def dashboard(request, channel_id):
             subs.append(k.subscriber_count)
             dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increase_in_views)
-    print(increase_in_subs)
+    #print(increase_in_views)
+    #print(increase_in_subs)
     increase_in_views = increase_in_views[::-1]
     increase_in_views = increase_in_views[:7]
     increase_in_subs = increase_in_subs[::-1]
@@ -105,7 +105,7 @@ def total_view_analysis(request, channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -122,12 +122,13 @@ def total_view_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy=float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
-
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
     for i in range(len(old_views)):
@@ -153,22 +154,22 @@ def total_view_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -215,7 +216,7 @@ def monthly_view_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 30:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -229,7 +230,7 @@ def monthly_view_analysis(request, channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -246,11 +247,13 @@ def monthly_view_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -277,22 +280,22 @@ def monthly_view_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -339,7 +342,7 @@ def bimonthly_view_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 15:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -353,7 +356,7 @@ def bimonthly_view_analysis(request, channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -370,11 +373,13 @@ def bimonthly_view_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -401,22 +406,22 @@ def bimonthly_view_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -463,7 +468,7 @@ def weekly_view_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 7:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -477,7 +482,7 @@ def weekly_view_analysis(request, channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -494,11 +499,13 @@ def weekly_view_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -525,22 +532,22 @@ def weekly_view_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -595,11 +602,11 @@ def total_sub_analysis(request, channel_id):
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         else:
-            increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
+            increse_in_old_views.append(k.subscriber_count - old_views[count_1 - 1])
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -616,11 +623,13 @@ def total_sub_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -647,22 +656,22 @@ def total_sub_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -709,7 +718,7 @@ def monthly_sub_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 30:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -719,11 +728,11 @@ def monthly_sub_analysis(request, channel_id):
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         else:
-            increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
+            increse_in_old_views.append(k.subscriber_count - old_views[count_1 - 1])
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -740,11 +749,13 @@ def monthly_sub_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -771,22 +782,22 @@ def monthly_sub_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -835,7 +846,7 @@ def bimonthly_sub_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 15:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -845,11 +856,11 @@ def bimonthly_sub_analysis(request, channel_id):
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         else:
-            increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
+            increse_in_old_views.append(k.subscriber_count - old_views[count_1 - 1])
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -866,11 +877,13 @@ def bimonthly_sub_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -897,22 +910,22 @@ def bimonthly_sub_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -961,7 +974,7 @@ def weekly_sub_analysis(request, channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 7:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -971,11 +984,11 @@ def weekly_sub_analysis(request, channel_id):
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         else:
-            increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
+            increse_in_old_views.append(k.subscriber_count - old_views[count_1 - 1])
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -992,11 +1005,13 @@ def weekly_sub_analysis(request, channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -1023,22 +1038,22 @@ def weekly_sub_analysis(request, channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     if 'User_Id' in request.session:
@@ -1087,7 +1102,7 @@ def weekly_views(channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 7:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -1101,7 +1116,7 @@ def weekly_views(channel_id):
             old_views.append(k.view_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -1118,11 +1133,13 @@ def weekly_views(channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -1149,22 +1166,22 @@ def weekly_views(channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     return [avg_accuracy,increase_in_predicted_views]
@@ -1174,7 +1191,7 @@ def weekly_sub(channel_id):
     channel_sub_data = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('-date1')
     channel_sub_data1 = channel_sub.objects.filter(channel_id=channel_main.objects.get(pk=channel_id)).order_by('date1')
     channel_sub_data1 = channel_sub_data1[len(channel_sub_data1) - 7:]
-    print(len(channel_sub_data1))
+    #print(len(channel_sub_data1))
     old_dates = []
     old_views = []
     increse_in_old_views = [0]
@@ -1184,11 +1201,11 @@ def weekly_sub(channel_id):
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         else:
-            increse_in_old_views.append(k.view_count - old_views[count_1 - 1])
+            increse_in_old_views.append(k.subscriber_count - old_views[count_1 - 1])
             old_views.append(k.subscriber_count)
             old_dates.append(k.date1)
         count_1 = count_1 + 1
-    print(increse_in_old_views)
+    #print(increse_in_old_views)
 
     # prediction for all available old views
     V1 = old_views[:len(old_views) - 1]
@@ -1205,11 +1222,13 @@ def weekly_sub(channel_id):
     if abs((predicted_p1 - actual) / actual) > abs((predicted_p2 - actual) / actual):
         for i in range(len(old_views)):
             predicted_old_views.append(p2[0] * i ** 2 + p2[1] * i + p2[2])
-            best.append("p2")
+        avg_accuracy = float(100 - abs((predicted_p2 - actual) / actual) * 100)
+        best.append("p2")
     else:
         for i in range(len(old_views)):
             predicted_old_views.append(p1[0] * i + p1[1])
-            best.append("p1")
+            avg_accuracy = float(100 - abs((predicted_p1 - actual) / actual) * 100)
+        best.append("p1")
 
     # old views,old_views_increment,prediction_old,accuracy
     accuracy_in_old_views = []
@@ -1236,22 +1255,22 @@ def weekly_sub(channel_id):
 
     increase_in_predicted_views = int(predicted_for_next_30[1] - predicted_for_next_30[0])
 
-    # print(len(predicted_dates),len(predicted_for_next_30))
+    # #print(len(predicted_dates),len(predicted_for_next_30))
     # for i,j in zip(views,predicted_old_views):
-    #    print(i,j)
+    #    #print(i,j)
 
     old_views1 = old_views
     increse_in_old_views1 = increse_in_old_views
     predicted_old_views1 = predicted_old_views
     old_dates1 = old_dates
     accuracy_in_old_views1 = accuracy_in_old_views
-    print(accuracy_in_old_views1)
+    #print(accuracy_in_old_views1)
     old_views1 = old_views1[::-1]
     increse_in_old_views1 = increse_in_old_views1[::-1]
     predicted_old_views1 = predicted_old_views1[::-1]
     old_dates1 = old_dates1[::-1]
     accuracy_in_old_views1 = accuracy_in_old_views1[::-1]
-    avg_accuracy = average(accuracy_in_old_views)
+    #avg_accuracy = average(accuracy_in_old_views)
     avg_accuracy='%.5f' % (avg_accuracy)
 
     return [avg_accuracy,increase_in_predicted_views]

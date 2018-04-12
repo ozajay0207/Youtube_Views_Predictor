@@ -56,10 +56,6 @@
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
                             class="hide-menu">Views Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            {% if Channel_Sub_Data.count > 1 %}
-                                <li><a href="/channel/dashboard/views_analysis/current/{{ Channel_Main_Data.id }}/">Current
-                                    Analysis</a></li>
-                            {% endif %}
                             {% if  Channel_Sub_Data.count >= 7 %}
                                 <li><a href="/channel/dashboard/views_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
                                     Analysis</a></li>
@@ -84,10 +80,6 @@
                     <li><a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span
                             class="hide-menu">Subscribers Analysis</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            {% if Channel_Sub_Data.count > 1 %}
-                                <li><a href="/channel/dashboard/subs_analysis/current/{{ Channel_Main_Data.id }}/">Current
-                                    Analysis</a></li>
-                            {% endif %}
                             {% if  Channel_Sub_Data.count >= 7 %}
                                 <li><a href="/channel/dashboard/subs_analysis/weekly/{{ Channel_Main_Data.id }}/">Weekly
                                     Analysis</a></li>
@@ -546,7 +538,7 @@
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
                     ],
                     borderColor: [
 
@@ -556,7 +548,7 @@
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
                         'rgba(255,99,132,1)',
-                        'rgba(255,99,132,1)',
+                        'rgba(255, 159, 64, 1)',
                     ],
                     borderWidth: 1
                 }]
